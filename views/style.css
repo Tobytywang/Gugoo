@@ -1,0 +1,58 @@
+div,ul,ol,dl{
+  margin: 0px;
+  padding: 0px;
+
+}
+a {
+  text-decoration:none;
+  color: #000000;
+}
+ul,ol,dl {
+  list-style: none;
+}
+.container {
+  background-color: #0000FF;
+}
+.top {
+  background-color: #339977;
+  height: 50px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+.left {
+  padding: 0px 0px 0px 0px;
+  background-color: #DDDDDD;
+  width: 180px;
+  height: 100%;
+  position: fixed;
+  top: 50px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+.left ul {
+  border-top: 1px solid #0000ff;
+}
+.left ul li{
+  border-bottom: 1px solid #0000ff;
+  background-color: #00aa00;
+  height: 30px;
+  text-align: center;
+}
+.left ul li div {
+  height: 30px;
+}
+.right {
+  background-color: #CCCCCC;
+  width: auto;
+  position: absolute;
+  top: 50px;
+  left: 180px;
+  right: 0px;
+  bottom: 0px;
+}
+.right-content table {
+}
