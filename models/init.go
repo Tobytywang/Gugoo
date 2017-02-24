@@ -15,9 +15,11 @@ var _DB_CONNECT_STR string = beego.AppConfig.String("mysqluser") +
 	":" + beego.AppConfig.String("mysqlpass") + "@/" +
 	beego.AppConfig.String("mysqldb") + "?charset=utf8" + "&loc=Local"
 
-// 注册模型，建表
 func RegisterDB() {
+	// 注册数据库驱动
 	orm.RegisterDriver(_DB_DRIVER, orm.DRMySQL)
+	// 链接数据库
 	orm.RegisterDataBase("default", _DB_DRIVER, _DB_CONNECT_STR)
+	// 自动建表
 	orm.RunSyncdb("default", false, true)
 }
