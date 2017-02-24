@@ -13,5 +13,6 @@ func (c *AddrController) Prepare() {
 }
 
 func (c *AddrController) Get() {
+
 	c.TplName = "pc/addrlist.html"
 }

@@ -8,13 +8,28 @@ import (
 // 创建成员的参数
 type Staff struct {
 	Id         int
-	UserId     string `json:"userid,omitempty"`     // 必须;  员工UserID. 对应管理端的帐号, 企业内必须唯一. 长度为1~64个字符
-	Name       string `json:"name,omitempty"`       // 必须;  成员名称. 长度为1~64个字符
-	Department int    `json:"department,omitempty"` // 非必须; 成员所属部门id列表. 注意, 每个部门的直属员工上限为1000个
-	Position   string `json:"position,omitempty"`   // 非必须; 职位信息. 长度为0~64个字符
-	Mobile     string `json:"mobile,omitempty"`     // 非必须; 手机号码. 企业内必须唯一, mobile/weixinid/email三者不能同时为空
-	Email      string `json:"email,omitempty"`      // 非必须; 邮箱. 长度为0~64个字符. 企业内必须唯一
-	WeixinId   string `json:"weixinid,omitempty"`   // 非必须; 微信号. 企业内必须唯一. (注意: 是微信号, 不是微信的名字)
+	UserId     string `orm:"unique"json:"userid,omitempty"`   // 必须;  员工UserID. 对应管理端的帐号, 企业内必须唯一. 长度为1~64个字符
+	Name       string `json:"name,omitempty"`                 // 必须;  成员名称. 长度为1~64个字符
+	Department int    `json:"department,omitempty"`           // 非必须; 成员所属部门id列表. 注意, 每个部门的直属员工上限为1000个
+	Position   string `json:"position,omitempty"`             // 非必须; 职位信息. 长度为0~64个字符
+	Mobile     string `orm:"unique"json:"mobile,omitempty"`   // 非必须; 手机号码. 企业内必须唯一, mobile/weixinid/email三者不能同时为空
+	Email      string `orm:"unique"json:"email,omitempty"`    // 非必须; 邮箱. 长度为0~64个字符. 企业内必须唯一
+	WeixinId   string `orm:"unique"json:"weixinid,omitempty"` // 非必须; 微信号. 企业内必须唯一. (注意: 是微信号, 不是微信的名字)
+}
+
+// 读取函数，从数据库里读出所有的成员
+func LoadStaff() {
+
+}
+
+// 存储函数，向数据库里储存所有的成员
+func SaveStaff(staff *Staff) (number int, err error) {
+	o := orm.NewOrm()
+	if _, err := o.Insert(staff); err != nil {
+		return -1, err
+	} else {
+		return 0, nil
+	}
 }
 
 // 注册模型

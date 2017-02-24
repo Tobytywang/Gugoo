@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -20,38 +21,38 @@ type Checkin struct {
 
 // 通过Checkin进行打卡操作
 // 参数为用户Id,时间由函数自动生成
-func Check(userid int) (flag int, err error) {
-	fsh := beego.AppConfig.Int("FirstStartHour")
-	fsm := beego.AppConfig.Int("FirstStartMinute")
+func Check() (flag int, err error) {
+	fsh, _ := beego.AppConfig.Int("FirstStartHour")
+	fsm, _ := beego.AppConfig.Int("FirstStartMinute")
 	fs := fsh*60 + fsm
-	feh := beego.AppConfig.Int("FirstEndHour")
-	fem := beego.AppConfig.Int("FirstEndMinute")
+	feh, _ := beego.AppConfig.Int("FirstEndHour")
+	fem, _ := beego.AppConfig.Int("FirstEndMinute")
 	fe := feh*60 + fem
-	ssh := beego.AppConfig.Int("SecondStartHour")
-	ssm := beego.AppConfig.Int("SecondStartMinute")
+	ssh, _ := beego.AppConfig.Int("SecondStartHour")
+	ssm, _ := beego.AppConfig.Int("SecondStartMinute")
 	ss := ssh*60 + ssm
-	seh := beego.AppConfig.Int("SecondEndHour")
-	sem := beego.AppConfig.Int("SecondEndMinute")
+	seh, _ := beego.AppConfig.Int("SecondEndHour")
+	sem, _ := beego.AppConfig.Int("SecondEndMinute")
 	se := seh*60 + sem
-	tsh := beego.AppConfig.Int("ThirdStartHour")
-	tsm := beego.AppConfig.Int("ThirdStartMinute")
+	tsh, _ := beego.AppConfig.Int("ThirdStartHour")
+	tsm, _ := beego.AppConfig.Int("ThirdStartMinute")
 	ts := tsh*60 + tsm
-	teh := beego.AppConfig.Int("ThirdEndHour")
-	tem := beego.AppConfig.Int("ThirdEndMinute")
-	te := teh*60 + tem
+	// teh, _ := beego.AppConfig.Int("ThirdEndHour")
+	// tem, _ := beego.AppConfig.Int("ThirdEndMinute")
+	// te := teh*60 + tem
 
 	nowhour := time.Now().Hour()
 	nowminute := time.Now().Minute()
 	now := nowhour*60 + nowminute
 
 	if now <= fs {
-		return 1, null
+		return 1, nil
 	} else if now >= fe && now <= ss {
-		return 2, null
+		return 2, nil
 	} else if now >= se && now <= ts {
-		return 3, null
+		return 3, nil
 	} else {
-		return -1, error.New("打卡失败！")
+		return -1, errors.New("打卡失败！")
 	}
 }
 
