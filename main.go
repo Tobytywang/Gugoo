@@ -15,6 +15,7 @@ func init() {
 
 func main() {
 	user1 := new(models.Staff)
+	user1.Id = 1
 	user1.UserId = "123"
 	user1.Name = "HappyLich"
 	user1.Department = 3
@@ -45,5 +46,19 @@ func main() {
 
 	beego.Debug("根据ID查找用户\n")
 	beego.Debug(models.StaffById(1))
+
+	leave := new(models.Leave)
+	leave.Staff = user1
+	leave.ApprovedBy = user1
+	leave.DateAsk = time.Now()
+	leave.DateOk = time.Now()
+	leave.DateStart = time.Now()
+	leave.DateEnd = time.Now()
+	if err := models.AskLeave(leave); err != nil {
+		beego.Debug(err)
+	}
+
+	// models.ApproveLeave(user1, leave)
+
 	beego.Run()
 }

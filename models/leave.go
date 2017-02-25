@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/astaxie/beego/orm"
@@ -17,6 +18,43 @@ type Leave struct {
 	DateStart  time.Time `orm:"type(datetime)"`                   // 请假开始时间
 	DateEnd    time.Time `orm:"type(datetime)"`                   // 请假结束时间
 	IsApproved int
+}
+
+// 发起请假申请函数
+// 同时存在在数据库中的IsApproved标志为0的申请，每个用户只能有一个
+// 参数： 请假结构Leave
+// 返回： 报错信息
+func AskLeave(leave *Leave) error {
+	o := orm.NewOrm()
+	var lv Leave
+	o.QueryTable("leaves").Filter("staff_id", leave.Staff.Id).Filter("is_approved", 0).One(&lv)
+	if lv.Id != 0 {
+		return errors.New("请等待当前请假申请批准")
+	} else {
+		if _, err := o.Insert(leave); err != nil {
+			return err
+		} else {
+			return nil
+		}
+	}
+}
+
+// 批准请假
+// 要求有权限认证机制
+// 这个可以在Model里写，可以在Controller里写
+// 参数：
+func ApproveLeave(appr *Staff, leave *Leave) error {
+	o := orm.NewOrm()
+	if appr == leave.ApprovedBy {
+		leave.IsApproved = 1
+		if _, err := o.Update(leave); err != nil {
+			return err
+		} else {
+			return nil
+		}
+	} else {
+		return errors.New("没有权限")
+	}
 }
 
 // 自定义表名
