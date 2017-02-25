@@ -1,7 +1,6 @@
 package models
 
 import (
-	"errors"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -20,8 +19,10 @@ type Checkin struct {
 }
 
 // 通过Checkin进行打卡操作
-// 参数为用户Id,时间由函数自动生成
-func Check() (flag int, err error) {
+// 参数： 指向用户的指针
+// 返回： 打卡记录，错误信息
+func Check(staffid int) (flag int, err error) {
+	o := orm.NewOrm()
 	fsh, _ := beego.AppConfig.Int("FirstStartHour")
 	fsm, _ := beego.AppConfig.Int("FirstStartMinute")
 	fs := fsh*60 + fsm
@@ -41,18 +42,41 @@ func Check() (flag int, err error) {
 	// tem, _ := beego.AppConfig.Int("ThirdEndMinute")
 	// te := teh*60 + tem
 
-	nowhour := time.Now().Hour()
-	nowminute := time.Now().Minute()
+	nowhour := time.Date(2017, 2, 25, 8, 30, 0, 0, time.Local).Hour()
+	nowminute := time.Date(2017, 2, 25, 8, 30, 0, 0, time.Local).Minute()
 	now := nowhour*60 + nowminute
 
+	checkin := new(Checkin)
+	if checkin.Staff, err = StaffById(staffid); err != nil {
+		return -1, err
+	}
+	checkin.Date = time.Now()
+
+	beego.Debug(checkin.Staff)
+	beego.Debug(*checkin)
 	if now <= fs {
-		return 1, nil
+		checkin.First = 1
+		if _, err := o.Insert(checkin); err != nil {
+			return -1, err
+		} else {
+			return 0, nil
+		}
 	} else if now >= fe && now <= ss {
-		return 2, nil
+		checkin.Second = 1
+		if _, err := o.Insert(checkin); err != nil {
+			return -1, err
+		} else {
+			return 0, nil
+		}
 	} else if now >= se && now <= ts {
-		return 3, nil
+		checkin.Third = 1
+		if _, err := o.Insert(checkin); err != nil {
+			return -1, err
+		} else {
+			return 0, nil
+		}
 	} else {
-		return -1, errors.New("打卡失败！")
+		return -1, err
 	}
 }
 

@@ -19,6 +19,11 @@ type Leave struct {
 	IsApproved int
 }
 
+// 自定义表名
+func (u *Leave) TableName() string {
+	return "leaves"
+}
+
 // 注册模型
 func init() {
 	orm.RegisterModel(new(Leave))

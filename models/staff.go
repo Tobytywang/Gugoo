@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -23,12 +25,29 @@ func LoadStaff() {
 }
 
 // 存储函数，向数据库里储存所有的成员
+// 参数： 一个指向staff的指针类型
+// 返回： 错误号码和错误信息
 func SaveStaff(staff *Staff) (number int, err error) {
 	o := orm.NewOrm()
 	if _, err := o.Insert(staff); err != nil {
 		return -1, err
 	} else {
 		return 0, nil
+	}
+}
+
+// 根据ID查找员工
+// 参数： 员工id
+// 返回： 员工指针，错误信息
+func StaffById(id int) (s *Staff, err error) {
+	o := orm.NewOrm()
+	var staff Staff
+	o.QueryTable("staff").Filter("id", id).One(&staff)
+
+	if staff.Id != 0 {
+		return &staff, nil
+	} else {
+		return &staff, errors.New("没有该用户")
 	}
 }
 

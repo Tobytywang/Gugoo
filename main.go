@@ -3,7 +3,6 @@ package main
 import (
 	"Gugoo/models"
 	_ "Gugoo/routers"
-	"fmt"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -28,20 +27,40 @@ func main() {
 		beego.Debug("内部错误:")
 		beego.Debug(err)
 	}
-
-	fmt.Printf("现在的时间是：%d点%d分\n", time.Now().Hour(), time.Now().Minute())
-	if n, err := models.Check(); err != nil {
+	beego.Debug("现在的时间是：", time.Now().Hour(), "点", time.Now().Minute(), "分\n")
+	if n, err := models.Check(1); err != nil {
+		beego.Debug(err)
+	} else {
 		switch n {
 		case 1:
-			fmt.Printf("第%d次打卡成功。\n", n)
+			beego.Debug("第", n, "次打卡成功。")
 		case 2:
-			fmt.Printf("第%d次打卡成功。\n", n)
+			beego.Debug("第", n, "次打卡成功。")
 		case 3:
-			fmt.Printf("第%d次打卡成功。\n", n)
+			beego.Debug("第", n, "次打卡成功。")
+		default:
+			beego.Debug("n=", n)
 		}
-	} else {
-		fmt.Printf("打卡失败！\n")
 	}
 
+	tm := time.Date(2017, 2, 25, 8, 30, 0, 0, time.Local)
+	beego.Debug("现在假设有时间：", tm.Hour(), "点", tm.Minute(), "分\n")
+	if n, err := models.Check(1); err != nil {
+		beego.Debug(err)
+	} else {
+		switch n {
+		case 1:
+			beego.Debug("第", n, "次打卡成功。")
+		case 2:
+			beego.Debug("第", n, "次打卡成功。")
+		case 3:
+			beego.Debug("第", n, "次打卡成功。")
+		default:
+			beego.Debug("n=", n)
+		}
+	}
+
+	beego.Debug("根据ID查找用户\n")
+	beego.Debug(models.StaffById(1))
 	beego.Run()
 }
