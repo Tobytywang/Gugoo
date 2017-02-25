@@ -20,8 +20,9 @@ type Staff struct {
 }
 
 // 读取函数，从数据库里读出所有的成员
-func LoadStaff() {
-
+func LoadStaff(slist *[]*Staff) {
+	o := orm.NewOrm()
+	o.QueryTable("staff").All(slist)
 }
 
 // 存储函数，向数据库里储存所有的成员

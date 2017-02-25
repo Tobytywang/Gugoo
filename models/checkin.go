@@ -18,6 +18,14 @@ type Checkin struct {
 	Third  int       // 第三次打卡
 }
 
+// 查看所有打卡信息
+// 参数： 一个可以容纳这些打卡信息的slice
+// 返回： 无
+func LoadCheckin(clist *[]*Checkin) {
+	o := orm.NewOrm()
+	o.QueryTable("checkin").All(clist)
+}
+
 // 通过Checkin进行打卡操作
 // 参数： 指向用户的指针
 // 返回： 打卡记录，错误信息

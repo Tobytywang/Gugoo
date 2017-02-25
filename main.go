@@ -59,6 +59,23 @@ func main() {
 	}
 
 	// models.ApproveLeave(user1, leave)
-
+	// 读取员工
+	slist := make([]*models.Staff, 0)
+	models.LoadStaff(&slist)
+	for i := 0; i < len(slist); i++ {
+		beego.Debug(slist[i])
+	}
+	// 读取
+	clist := make([]*models.Checkin, 0)
+	models.LoadCheckin(&clist)
+	for i := 0; i < len(clist); i++ {
+		beego.Debug(clist[i])
+	}
+	// 读取
+	llist := make([]*models.Leave, 0)
+	models.LoadLeave(&llist)
+	for i := 0; i < len(llist); i++ {
+		beego.Debug(llist[i])
+	}
 	beego.Run()
 }

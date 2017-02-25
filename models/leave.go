@@ -20,6 +20,14 @@ type Leave struct {
 	IsApproved int
 }
 
+// 查看所有请假信息
+// 参数： 一个可以容纳这些请假信息的slice
+// 返回： 无
+func LoadLeave(llist *[]*Leave) {
+	o := orm.NewOrm()
+	o.QueryTable("leaves").All(llist)
+}
+
 // 发起请假申请函数
 // 同时存在在数据库中的IsApproved标志为0的申请，每个用户只能有一个
 // 参数： 请假结构Leave
