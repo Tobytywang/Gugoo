@@ -42,8 +42,8 @@ func Check(staffid int) (flag int, err error) {
 	// tem, _ := beego.AppConfig.Int("ThirdEndMinute")
 	// te := teh*60 + tem
 
-	nowhour := time.Date(2017, 2, 25, 8, 30, 0, 0, time.Local).Hour()
-	nowminute := time.Date(2017, 2, 25, 8, 30, 0, 0, time.Local).Minute()
+	nowhour := time.Now().Hour()
+	nowminute := time.Now().Minute()
 	now := nowhour*60 + nowminute
 
 	checkin := new(Checkin)
@@ -77,6 +77,12 @@ func Check(staffid int) (flag int, err error) {
 		}
 	} else {
 		return -1, err
+	}
+}
+
+func (c *Checkin) TableUnique() [][]string {
+	return [][]string{
+		[]string{"Staff", "Date"},
 	}
 }
 
