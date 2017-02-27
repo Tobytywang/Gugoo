@@ -25,8 +25,7 @@ func main() {
 	user1.WeixinId = "455sd"
 
 	if _, err := models.SaveStaff(user1); err != nil {
-		beego.Debug("内部错误:")
-		beego.Debug(err)
+		//beego.Debug(err)
 	}
 	beego.Debug("现在的时间是：", time.Now().Hour(), "点", time.Now().Minute(), "分\n")
 	if n, err := models.Check("123"); err != nil {
@@ -34,18 +33,18 @@ func main() {
 	} else {
 		switch n {
 		case 1:
-			beego.Debug("第", n, "次打卡成功。")
+			beego.Debug("不到打卡时间")
 		case 2:
-			beego.Debug("第", n, "次打卡成功。")
+			beego.Debug("打卡成功！")
 		case 3:
-			beego.Debug("第", n, "次打卡成功。")
+			beego.Debug("已经打过卡了")
 		default:
-			beego.Debug("n=", n)
+			beego.Debug("打卡失败")
 		}
 	}
 
-	beego.Debug("根据ID查找用户\n")
-	beego.Debug(models.StaffByUserId("123"))
+	//beego.Debug("根据ID查找用户\n")
+	//beego.Debug(models.StaffByUserId("123"))
 
 	leave := new(models.Leave)
 	leave.Staff = user1
@@ -55,7 +54,7 @@ func main() {
 	leave.DateStart = time.Now()
 	leave.DateEnd = time.Now()
 	if err := models.AskLeave(leave); err != nil {
-		beego.Debug(err)
+		// beego.Debug(err)
 	}
 
 	// models.ApproveLeave(user1, leave)
@@ -63,19 +62,19 @@ func main() {
 	slist := make([]*models.Staff, 0)
 	models.LoadStaff(&slist)
 	for i := 0; i < len(slist); i++ {
-		beego.Debug(slist[i])
+		//beego.Debug(slist[i])
 	}
 	// 读取
 	clist := make([]*models.Checkin, 0)
 	models.LoadCheckin(&clist)
 	for i := 0; i < len(clist); i++ {
-		beego.Debug(clist[i])
+		// beego.Debug(clist[i])
 	}
 	// 读取
 	llist := make([]*models.Leave, 0)
 	models.LoadLeave(&llist)
 	for i := 0; i < len(llist); i++ {
-		beego.Debug(llist[i])
+		// beego.Debug(llist[i])
 	}
 	beego.Run()
 }
