@@ -20,4 +20,5 @@ func init() {
 
 	// 通讯录
 	beego.Router("/addr", &controllers.AddrController{})
+
 }
