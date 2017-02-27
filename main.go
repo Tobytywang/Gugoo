@@ -24,7 +24,8 @@ func main() {
 	//orm.RunSyncdb("default", false, true)
 
 	//wechat.CreateMenu()
-	wechat.PrintMenu()
+	//wechat.PrintMenu()
+	//wechat.SendText("67|HappyLich", "企业号主动给你发消息了～～～")
 	wechat.LocationMap = make(map[string]request.LocationEvent)
 	//wechat.UpdateStaffInfo()
 	go wechat.Wechat()

@@ -48,9 +48,9 @@ func Check(userid string) (flag int, err error) {
 	tsh, _ := beego.AppConfig.Int("ThirdStartHour")
 	tsm, _ := beego.AppConfig.Int("ThirdStartMinute")
 	ts := tsh*60 + tsm
-	teh, _ := beego.AppConfig.Int("ThirdEndHour")
-	tem, _ := beego.AppConfig.Int("ThirdEndMinute")
-	te := teh*60 + tem
+	//teh, _ := beego.AppConfig.Int("ThirdEndHour")
+	//tem, _ := beego.AppConfig.Int("ThirdEndMinute")
+	//te := teh*60 + tem
 
 	nowhour := time.Now().Hour()
 	nowminute := time.Now().Minute()
@@ -64,28 +64,29 @@ func Check(userid string) (flag int, err error) {
 
 	beego.Debug(checkin.Staff)
 	beego.Debug(*checkin)
-	if now <= fs {
+
+	if now <= fs { //00:00-09:00
 		checkin.First = 1
 		if _, err := o.Insert(checkin); err != nil {
 			return -1, err
 		} else {
 			return 0, nil
 		}
-	} else if now >= fe && now <= ss {
+	} else if now >= fe && now <= ss { //11:30-13:30
 		checkin.Second = 1
 		if _, err := o.Insert(checkin); err != nil {
 			return -1, err
 		} else {
 			return 0, nil
 		}
-	} else if now >= se && now <= ts {
+	} else if now >= se && now <= ts { //17:00-18:00
 		checkin.Third = 1
 		if _, err := o.Insert(checkin); err != nil {
 			return -1, err
 		} else {
 			return 0, nil
 		}
-	} else if now >= se && now <= ts {
+	} else { //不在打卡时间内
 		return -1, err
 	}
 }

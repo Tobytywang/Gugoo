@@ -6,12 +6,14 @@ import (
 	"math"
 	"net/http"
 
-	"time"
+	//"time"
 
 	"github.com/chanxuehong/wechat/corp"
 	"github.com/chanxuehong/wechat/corp/menu"
 	"github.com/chanxuehong/wechat/corp/message/request"
 	"github.com/chanxuehong/wechat/corp/message/response"
+	//"Gugoo/models"
+	"time"
 )
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, err error) {
@@ -35,17 +37,6 @@ func EarthDistance(lat1, lng1, lat2, lng2 float64) float64 {
 func LocationEventHandler(w http.ResponseWriter, r *corp.Request) {
 	location := request.GetLocationEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	LocationMap[location.FromUserName] = *location
-	//distance := EarthDistance(LocationX, LocationY, location.Latitude, location.Longitude)
-	//state := "未打卡"
-	//if distance < 50 {
-	//	state = "打卡成功"
-	//} else {
-	//	state = "打卡失败"
-	//}
-	//resp := response.NewText(location.FromUserName, location.ToUserName, location.CreateTime, "x:"+fmt.Sprint(location.Latitude)+"	y:"+fmt.Sprint(location.Longitude)+"	scale:"+fmt.Sprint(location.Precision)+location.Event+"	距离："+fmt.Sprint(distance)+"	打卡状态："+fmt.Sprint(state))
-	//fmt.Println(location)
-	//fmt.Println(resp)
-	//corp.WriteResponse(w, r, resp)
 }
 
 // 订阅事件的 Handler
@@ -58,7 +49,7 @@ func SubscribeEventHandler(w http.ResponseWriter, r *corp.Request) {
 
 // 取消订阅事件的 Handler
 func UnSubscribeEventHandler(w http.ResponseWriter, r *corp.Request) {
-	//用户取消关注后，应该做些什么？？？
+	//用户取消关注后，需要做些什么？？？
 	unsubscribe := request.GetUnsubscribeEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	resp := response.NewText(unsubscribe.FromUserName, unsubscribe.ToUserName, unsubscribe.CreateTime, "别走呀～～～")
 	fmt.Println(unsubscribe, resp)
@@ -68,29 +59,33 @@ func UnSubscribeEventHandler(w http.ResponseWriter, r *corp.Request) {
 func ClickEventHandler(w http.ResponseWriter, r *corp.Request) {
 	click := menu.GetClickEvent(r.MixedMsg)
 	loc := LocationMap[click.FromUserName]
-	state := "未打卡"
+	distance := EarthDistance(LocationX, LocationY, loc.Latitude, loc.Longitude)
 	switch click.EventKey {
 	case "1": //打卡
+		msg := ""
+		//state,err := models.Check(click.FromUserName)
+		switch {
 		//缓存的位置信息超过30秒，不算
-		if time.Now().Unix() - loc > 30 {
-			resp := response.NewText(click.FromUserName, click.ToUserName, click.CreateTime,"\n打卡状态：打卡失败\n尚未获取到你当前的位置信息，请检查是否已允许提供位置信息并重试！")
-			corp.WriteResponse(w, r, resp)
-		} else if  {//查找数据库，判断是否已打过卡
-			state =  "已打过卡，请勿重复操作！"
-
-		} else {
-			distance := EarthDistance(LocationX, LocationY, loc.Latitude, loc.Longitude)
-			//将打卡距离设置为50米
-			if distance < 50 {
-				state = "打卡成功"
-			} else {
-				state = "打卡失败"
-			}
-
-			resp := response.NewText(click.FromUserName, click.ToUserName, click.CreateTime, "经度:"+fmt.Sprint(loc.Latitude)+"\n纬度:"+fmt.Sprint(loc.Longitude)+"\n精度:"+fmt.Sprint(loc.Precision)+"\n时间:"+time.Unix(loc.CreateTime, 0).Format("2006-01-02 15:04:05")+"\n距离："+fmt.Sprint(distance)+"米\n打卡状态："+fmt.Sprint(state))
-			corp.WriteResponse(w, r, resp)
+		case time.Now().Unix()-loc.CreateTime > 30:
+			msg = "打卡失败\n\n尚未获取到你当前的位置信息，请检查是否已允许提供位置信息并重试！"
+			break
+		//case ://已打过卡
+		//	msg =  "已打过卡，请勿重复操作！"
+		//	break
+		//将打卡距离设置为50米
+		case distance > 50:
+			msg = "打卡失败\n\n时间：" + time.Unix(loc.CreateTime, 0).Format("2006-01-02 15:04:05") + "\n距离：" + fmt.Sprint(distance) + "米\n\n距离工作室太远，请进入工作室再重试！"
+			break
+		//case distance <= 50://在工作室附近，后台数据库insert失败
+		//	msg = "打卡失败\n在工作室附近，后台数据库insert失败，请联系后台开发人员（卢琦或王天宇）"
+		//	break
+		case distance <= 50: //
+			msg = "打卡成功\n\n时间：" + time.Unix(loc.CreateTime, 0).Format("2006-01-02 15:04:05") + "\n距离：" + fmt.Sprint(distance) + "米"
+			break
 		}
 
+		resp := response.NewText(click.FromUserName, click.ToUserName, click.CreateTime, msg)
+		corp.WriteResponse(w, r, resp)
 
 	case "2": //从数据库搜索今日打卡状态，分为上午、下午、晚上
 		resp := response.NewText(click.FromUserName, click.ToUserName, click.CreateTime, "今日打卡情况\n\n"+"上午：已打卡\n"+"下午：已打卡\n"+"晚上：未打卡"+"\n" /*+GetAuthCodeURL()*/)

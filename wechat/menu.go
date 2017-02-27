@@ -3,8 +3,11 @@ package wechat
 import (
 	"fmt"
 
+	"log"
+
 	"github.com/chanxuehong/wechat/corp"
 	"github.com/chanxuehong/wechat/corp/menu"
+	"github.com/chanxuehong/wechat/corp/message/send"
 	"github.com/chanxuehong/wechat/corp/oauth2"
 )
 
@@ -73,4 +76,19 @@ func GetUserInfo(code string) (string, string, error) {
 	oauth2Client := (*oauth2.Client)(corpClient)
 	userInfo, err := oauth2Client.UserInfo(HelperAgentId, code)
 	return userInfo.UserId, userInfo.DeviceId, err
+}
+
+func SendText(userid, content string) {
+	sendClient := (*send.Client)(corpClient)
+	msgheader := &send.MessageHeader{
+		MsgType: send.MsgTypeText,
+		AgentId: HelperAgentId,
+		ToUser:  userid,
+	}
+	text := new(send.Text)
+	text.MessageHeader = *msgheader
+	text.Text.Content = content
+
+	r, err := sendClient.SendText(text)
+	log.Println(*r, err)
 }
