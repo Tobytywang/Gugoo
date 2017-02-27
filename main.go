@@ -45,7 +45,7 @@ func main() {
 	}
 
 	beego.Debug("根据ID查找用户\n")
-	beego.Debug(models.StaffById("123"))
+	beego.Debug(models.StaffByUserId("123"))
 
 	leave := new(models.Leave)
 	leave.Staff = user1

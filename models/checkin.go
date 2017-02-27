@@ -55,7 +55,7 @@ func Check(userid string) (flag int, err error) {
 	now := nowhour*60 + nowminute
 
 	checkin := new(Checkin)
-	if checkin.Staff, err = StaffById(userid); err != nil {
+	if checkin.Staff, err = StaffByUserId(userid); err != nil {
 		return -1, err
 	}
 	checkin.Date = time.Now()

@@ -38,9 +38,9 @@ func SaveStaff(staff *Staff) (number int, err error) {
 }
 
 // 根据ID查找员工
-// 参数： 员工id
+// 参数： 员工userid
 // 返回： 员工指针，错误信息
-func StaffById(userid string) (s *Staff, err error) {
+func StaffByUserId(userid string) (s *Staff, err error) {
 	o := orm.NewOrm()
 	var staff Staff
 	o.QueryTable("staff").Filter("user_id", userid).One(&staff)
