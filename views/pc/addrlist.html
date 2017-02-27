@@ -18,16 +18,13 @@
             <th>电话</ht>
             <th>邮箱</th>
           </tr>
+          {{range .Staff}}
           <tr>
-            <td>王天宇</td>
-            <td>15522224444</td>
-            <td>wang@163.com</td>
+            <td>{{.Name}}</td>
+            <td>{{.Mobile}}</td>
+            <td>{{.Email}}</td>
           </tr>
-          <tr>
-            <td>卢琦</td>
-            <td>15544442222</td>
-            <td>lu@163.com</td>
-          </tr>
+          {{end }}
         </table>
       </div>
     </div>

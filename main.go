@@ -29,7 +29,7 @@ func main() {
 		beego.Debug(err)
 	}
 	beego.Debug("现在的时间是：", time.Now().Hour(), "点", time.Now().Minute(), "分\n")
-	if n, err := models.Check(1); err != nil {
+	if n, err := models.Check("123"); err != nil {
 		beego.Debug(err)
 	} else {
 		switch n {
@@ -45,7 +45,7 @@ func main() {
 	}
 
 	beego.Debug("根据ID查找用户\n")
-	beego.Debug(models.StaffById(1))
+	beego.Debug(models.StaffById("123"))
 
 	leave := new(models.Leave)
 	leave.Staff = user1

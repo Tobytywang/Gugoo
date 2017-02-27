@@ -12,7 +12,23 @@
     </div>
     <div class="right">
       <div class="right-content">
-          <h1>这是打卡信息</h1>
+        <h2>打卡信息</h2>
+        <table>
+          <tr>
+            <th>姓名</th>
+            <th>上午</ht>
+            <th>下午</th>
+            <th>晚上</th>
+          </tr>
+          {{range .Checkin}}
+          <tr>
+            <td>{{.Staff.Id}}</td>
+            <td>{{.First}}</td>
+            <td>{{.Second}}</td>
+            <td>{{.Third}}</td>
+          </tr>
+          {{end }}
+        </table>
       </div>
     </div>
   </div>

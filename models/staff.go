@@ -40,10 +40,10 @@ func SaveStaff(staff *Staff) (number int, err error) {
 // 根据ID查找员工
 // 参数： 员工id
 // 返回： 员工指针，错误信息
-func StaffById(id int) (s *Staff, err error) {
+func StaffById(userid string) (s *Staff, err error) {
 	o := orm.NewOrm()
 	var staff Staff
-	o.QueryTable("staff").Filter("id", id).One(&staff)
+	o.QueryTable("staff").Filter("user_id", userid).One(&staff)
 
 	if staff.Id != 0 {
 		return &staff, nil
