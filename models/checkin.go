@@ -37,18 +37,20 @@ func Check(staffid int) (flag int, err error) {
 	feh, _ := beego.AppConfig.Int("FirstEndHour")
 	fem, _ := beego.AppConfig.Int("FirstEndMinute")
 	fe := feh*60 + fem
+
 	ssh, _ := beego.AppConfig.Int("SecondStartHour")
 	ssm, _ := beego.AppConfig.Int("SecondStartMinute")
 	ss := ssh*60 + ssm
 	seh, _ := beego.AppConfig.Int("SecondEndHour")
 	sem, _ := beego.AppConfig.Int("SecondEndMinute")
 	se := seh*60 + sem
+
 	tsh, _ := beego.AppConfig.Int("ThirdStartHour")
 	tsm, _ := beego.AppConfig.Int("ThirdStartMinute")
 	ts := tsh*60 + tsm
-	// teh, _ := beego.AppConfig.Int("ThirdEndHour")
-	// tem, _ := beego.AppConfig.Int("ThirdEndMinute")
-	// te := teh*60 + tem
+	teh, _ := beego.AppConfig.Int("ThirdEndHour")
+	tem, _ := beego.AppConfig.Int("ThirdEndMinute")
+	te := teh*60 + tem
 
 	nowhour := time.Now().Hour()
 	nowminute := time.Now().Minute()
@@ -83,7 +85,7 @@ func Check(staffid int) (flag int, err error) {
 		} else {
 			return 0, nil
 		}
-	} else {
+	} else if now >= se && now <= ts {
 		return -1, err
 	}
 }
