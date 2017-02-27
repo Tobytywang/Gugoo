@@ -29,7 +29,7 @@ func LoadCheckin(clist *[]*Checkin) {
 // 通过Checkin进行打卡操作
 // 参数： 指向用户的指针
 // 返回： 打卡记录，错误信息
-func Check(staffid int) (flag int, err error) {
+func Check(userid string) (flag int, err error) {
 	o := orm.NewOrm()
 	fsh, _ := beego.AppConfig.Int("FirstStartHour")
 	fsm, _ := beego.AppConfig.Int("FirstStartMinute")
@@ -57,7 +57,7 @@ func Check(staffid int) (flag int, err error) {
 	now := nowhour*60 + nowminute
 
 	checkin := new(Checkin)
-	if checkin.Staff, err = StaffById(staffid); err != nil {
+	if checkin.Staff, err = StaffByUserId(userid); err != nil {
 		return -1, err
 	}
 	checkin.Date = time.Now()

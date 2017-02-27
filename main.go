@@ -30,7 +30,7 @@ func main() {
 	go wechat.Wechat()
 
 	//user1 := new(models.Staff)
-	////user1.Id = 1
+	//user1.Id = 1
 	//user1.UserId = "123"
 	//user1.Name = "HappyLich"
 	//user1.Department = 3
@@ -44,7 +44,7 @@ func main() {
 	//	beego.Debug(err)
 	//}
 	//beego.Debug("现在的时间是：", time.Now().Hour(), "点", time.Now().Minute(), "分\n")
-	//if n, err := models.Check(1); err != nil {
+	//if n, err := models.Check("123"); err != nil {
 	//	beego.Debug(err)
 	//} else {
 	//	switch n {
@@ -60,38 +60,7 @@ func main() {
 	//}
 	//
 	//beego.Debug("根据ID查找用户\n")
-	//beego.Debug(models.StaffById(1))
-	//
-	//leave := new(models.Leave)
-	//leave.Staff = user1
-	//leave.ApprovedBy = user1
-	//leave.DateAsk = time.Now()
-	//leave.DateOk = time.Now()
-	//leave.DateStart = time.Now()
-	//leave.DateEnd = time.Now()
-	//if err := models.AskLeave(leave); err != nil {
-	//	beego.Debug(err)
-	//}
-	//
-	//// models.ApproveLeave(user1, leave)
-	//// 读取员工
-	//slist := make([]*models.Staff, 0)
-	//models.LoadStaff(&slist)
-	//for i := 0; i < len(slist); i++ {
-	//	beego.Debug(slist[i])
-	//}
-	//// 读取
-	//clist := make([]*models.Checkin, 0)
-	//models.LoadCheckin(&clist)
-	//for i := 0; i < len(clist); i++ {
-	//	beego.Debug(clist[i])
-	//}
-	//// 读取
-	//llist := make([]*models.Leave, 0)
-	//models.LoadLeave(&llist)
-	//for i := 0; i < len(llist); i++ {
-	//	beego.Debug(llist[i])
-	//}
+	//beego.Debug(models.StaffByUserId("123"))
 
 	beego.Run()
 }
