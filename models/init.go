@@ -20,6 +20,8 @@ func RegisterDB() {
 	orm.RegisterDriver(_DB_DRIVER, orm.DRMySQL)
 	// 链接数据库
 	orm.RegisterDataBase("default", _DB_DRIVER, _DB_CONNECT_STR)
+	//统一注册模型
+	//orm.RegisterModel(new(Checkin), new(Leave), new(Staff))
 	// 自动建表
-	orm.RunSyncdb("default", false, true)
+	//orm.RunSyncdb("default", false, true)
 }

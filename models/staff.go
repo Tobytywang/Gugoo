@@ -12,7 +12,7 @@ type Staff struct {
 	Id         int
 	UserId     string `orm:"unique"json:"userid,omitempty"`   // 必须;  员工UserID. 对应管理端的帐号, 企业内必须唯一. 长度为1~64个字符
 	Name       string `json:"name,omitempty"`                 // 必须;  成员名称. 长度为1~64个字符
-	Department int    `json:"department,omitempty"`           // 非必须; 成员所属部门id列表. 注意, 每个部门的直属员工上限为1000个
+	Department int64  `json:"department,omitempty"`           // 非必须; 成员所属部门id列表. 注意, 每个部门的直属员工上限为1000个
 	Position   string `json:"position,omitempty"`             // 非必须; 职位信息. 长度为0~64个字符
 	Mobile     string `orm:"unique"json:"mobile,omitempty"`   // 非必须; 手机号码. 企业内必须唯一, mobile/weixinid/email三者不能同时为空
 	Email      string `orm:"unique"json:"email,omitempty"`    // 非必须; 邮箱. 长度为0~64个字符. 企业内必须唯一
@@ -50,6 +50,19 @@ func StaffByUserId(userid string) (s *Staff, err error) {
 	} else {
 		return &staff, errors.New("没有该用户")
 	}
+}
+
+//更新员工信息，很少用到
+func StaffUpdate(staff *Staff, fields ...string) error {
+	_, err := orm.NewOrm().Update(staff, fields...)
+	return err
+
+}
+
+//删除员工，很少用到
+func StaffDelete(id int) error {
+	_, err := orm.NewOrm().QueryTable("staff").Filter("id", id).Delete()
+	return err
 }
 
 // 注册模型
