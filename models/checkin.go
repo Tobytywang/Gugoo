@@ -81,37 +81,20 @@ func Check(userid string) (flag int, err error) {
 		beego.Debug("没有查到数据")
 		if now <= fs && now >= (fs-PRE_TIME) {
 			checkin.First = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("上午")
-				return 2, nil
-			}
 		} else if now <= ss && now >= (ss-PRE_TIME) {
 			checkin.Second = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("中午")
-				return 2, nil
-			}
 		} else if now <= ts && ts >= (ts-PRE_TIME) {
 			checkin.Third = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("晚上")
-				beego.Debug(err)
-				beego.Debug(checkin)
-				beego.Debug(now)
-				return 2, nil
-			}
 		} else {
 			beego.Debug("不在打卡时间")
 			return 1, err
+		}
+		if _, err := o.Insert(checkin); err != nil {
+			beego.Debug(err)
+			return -1, err
+		} else {
+			beego.Debug(checkin)
+			return 2, nil
 		}
 	} else {
 		beego.Debug(ch)
