@@ -31,6 +31,31 @@ func LoadCheckin(clist *[]*Checkin) {
 	o.QueryTable("checkin").All(clist)
 }
 
+func GetTodayCheckinStateByUserid(userid string) (string, error) {
+	o := orm.NewOrm()
+	var ch Checkin
+	var state string = "今日打卡情况\n\n"
+	staff, err := StaffByUserId(userid)
+	if err != nil {
+		return "不存在该用户", err
+	}
+	err = o.QueryTable("checkin").Filter("staff_id", staff.Id).Filter("date", time.Now().Format("20060102")).One(&ch)
+
+	if err == orm.ErrNoRows {
+		return "今日打卡情况\n\n上午：未打卡\n下午：未打卡\n晚上：未打卡", nil
+	}
+
+	if err != nil {
+		return "程序错误！请联系后台开发人员（卢琦或王天宇）", err
+	}
+	var mp [2]string
+	mp[0] = "未打卡"
+	mp[1] = "已打卡"
+	state += "上午：" + mp[ch.First] + "\n下午：" + mp[ch.Second] + "\n晚上：" + mp[ch.Third]
+
+	return state, nil
+}
+
 // 通过Checkin进行打卡操作
 // 参数： 指向用户的指针
 // 返回： 状态标记，错误信息
@@ -42,30 +67,7 @@ func Check(userid string) (flag int, err error) {
 	o := orm.NewOrm()
 	fsh, _ := beego.AppConfig.Int("FirstStartHour")
 	fsm, _ := beego.AppConfig.Int("FirstStartMinute")
-<<<<<<< HEAD
-	fs := fsh*60 + fsm
-	feh, _ := beego.AppConfig.Int("FirstEndHour")
-	fem, _ := beego.AppConfig.Int("FirstEndMinute")
-	fe := feh*60 + fem
 
-	ssh, _ := beego.AppConfig.Int("SecondStartHour")
-	ssm, _ := beego.AppConfig.Int("SecondStartMinute")
-	ss := ssh*60 + ssm
-	seh, _ := beego.AppConfig.Int("SecondEndHour")
-	sem, _ := beego.AppConfig.Int("SecondEndMinute")
-	se := seh*60 + sem
-
-	tsh, _ := beego.AppConfig.Int("ThirdStartHour")
-	tsm, _ := beego.AppConfig.Int("ThirdStartMinute")
-	ts := tsh*60 + tsm
-	//teh, _ := beego.AppConfig.Int("ThirdEndHour")
-	//tem, _ := beego.AppConfig.Int("ThirdEndMinute")
-	//te := teh*60 + tem
-
-	nowhour := time.Now().Hour()
-	nowminute := time.Now().Minute()
-	now := nowhour*60 + nowminute
-=======
 	fs, err := hm2m(fsh, fsm)
 	if err != nil {
 		return -1, err
@@ -82,11 +84,14 @@ func Check(userid string) (flag int, err error) {
 	if err != nil {
 		return -1, err
 	}
-	//nowhour := time.Now().Hour()
-	//nowminute := time.Now().Minute()
+
+	//测试用
+	//fs += 60
+	//ss += 60
+	//ts += 60
+
 	now := time.Now().Hour()*60 + time.Now().Minute()
 	beego.Debug(time.Now().Hour()*60 + time.Now().Minute())
->>>>>>> 05478c60f5b79b71292b906ff03a76c822f606c2
 
 	checkin := new(Checkin)
 	staff, err := StaffByUserId(userid)
@@ -96,24 +101,16 @@ func Check(userid string) (flag int, err error) {
 	checkin.Staff = staff
 	checkin.Date = time.Now().Format("20060102")
 
-<<<<<<< HEAD
-	beego.Debug(checkin.Staff)
-	beego.Debug(*checkin)
-
-	if now <= fs { //00:00-09:00
-		checkin.First = 1
-		if _, err := o.Insert(checkin); err != nil {
-			return -1, err
-=======
 	var ch Checkin
 	beego.Debug(staff.Id)
 	err = o.QueryTable("checkin").Filter("staff_id", staff.Id).Filter("date", time.Now().Format("20060102")).One(&ch)
 	// beego.Debug(ch)
 	// beego.Debug(err)
 	// beego.Debug(reflect.TypeOf(orm.ErrNoRows))
+	beego.Debug(now, fs, ss, ts)
 	if err == orm.ErrNoRows {
 		beego.Debug("没有查到数据")
-		if now <= fs && now >= (fs-PRE_TIME) {
+		if now <= fs+PRE_TIME && now >= (fs-PRE_TIME) {
 			checkin.First = 1
 			if _, err := o.Insert(checkin); err != nil {
 				beego.Debug(err)
@@ -122,7 +119,7 @@ func Check(userid string) (flag int, err error) {
 				beego.Debug("上午")
 				return 2, nil
 			}
-		} else if now <= ss && now >= (ss-PRE_TIME) {
+		} else if now <= ss+PRE_TIME && now >= (ss-PRE_TIME) {
 			checkin.Second = 1
 			if _, err := o.Insert(checkin); err != nil {
 				beego.Debug(err)
@@ -131,7 +128,7 @@ func Check(userid string) (flag int, err error) {
 				beego.Debug("中午")
 				return 2, nil
 			}
-		} else if now <= ts && ts >= (ts-PRE_TIME) {
+		} else if now <= ts+PRE_TIME && now >= (ts-PRE_TIME) {
 			checkin.Third = 1
 			if _, err := o.Insert(checkin); err != nil {
 				beego.Debug(err)
@@ -143,24 +140,16 @@ func Check(userid string) (flag int, err error) {
 				beego.Debug(now)
 				return 2, nil
 			}
->>>>>>> 05478c60f5b79b71292b906ff03a76c822f606c2
 		} else {
-			beego.Debug("不在打卡时间")
 			return 1, err
 		}
-<<<<<<< HEAD
-	} else if now >= fe && now <= ss { //11:30-13:30
-		checkin.Second = 1
-		if _, err := o.Insert(checkin); err != nil {
-			return -1, err
-=======
 	} else {
 		beego.Debug(ch)
 		ch.Staff = staff
-		if now <= fs && now >= (fs-PRE_TIME) {
+		if now <= fs+PRE_TIME && now >= (fs-PRE_TIME) {
 			beego.Debug(now)
 			return 3, nil
-		} else if now <= ss && now >= (ss-PRE_TIME) {
+		} else if now <= ss+PRE_TIME && now >= (ss-PRE_TIME) {
 			if ch.Second == 1 {
 				beego.Debug(now)
 				return 3, nil
@@ -173,7 +162,7 @@ func Check(userid string) (flag int, err error) {
 					return 2, nil
 				}
 			}
-		} else if now <= ts && ts >= (ts-PRE_TIME) {
+		} else if now <= ts+PRE_TIME && now >= (ts-PRE_TIME) {
 			if ch.Third == 1 {
 				beego.Debug(now)
 				beego.Debug()
@@ -187,35 +176,24 @@ func Check(userid string) (flag int, err error) {
 					return 2, nil
 				}
 			}
->>>>>>> 05478c60f5b79b71292b906ff03a76c822f606c2
 		} else {
 			return 1, nil
 		}
-<<<<<<< HEAD
-	} else if now >= se && now <= ts { //17:00-18:00
-		checkin.Third = 1
-		if _, err := o.Insert(checkin); err != nil {
-			return -1, err
-=======
+
 	}
 	return
 }
 
+//将8:30转换为8*60+30=510分钟再来比较大小
 func hm2m(hour int, minute int) (int, error) {
 	if (hour >= 0) && (hour <= 23) {
 		if (minute >= 0) && (minute <= 59) {
 			return (hour*60 + minute), nil
->>>>>>> 05478c60f5b79b71292b906ff03a76c822f606c2
 		} else {
 			return -1, errors.New("错误的分钟数")
 		}
-<<<<<<< HEAD
-	} else { //不在打卡时间内
-		return -1, err
-=======
 	} else {
 		return -1, errors.New("错误的小时数")
->>>>>>> 05478c60f5b79b71292b906ff03a76c822f606c2
 	}
 }
 
