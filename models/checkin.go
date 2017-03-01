@@ -43,9 +43,26 @@ func LoadCheckin() (check []Checkin, err error) {
 	return check, nil
 }
 
+// 查看所有打卡信息
+// 参数： 无
+// 返回： 一个可以容纳所有结果的slice，错误信息
+func LoadCheckinByUserId(userid string) (check []Checkin, err error) {
+	o := orm.NewOrm()
+	beego.Debug("开始LoadCheckin")
+	o.QueryTable("checkin").RelatedSel().Filter("Staff__UserId", userid).All(&check)
+	beego.Debug("结束LoadCheckin")
+	return check, nil
+}
+
 func LoadCheckinByTime(year string, month string) (check []Checkin, err error) {
 	o := orm.NewOrm()
 	o.QueryTable("checkin").RelatedSel().Filter("date__contains", year+"-"+month).All(&check)
+	return check, nil
+}
+
+func LoadCheckinByTimeAndUserId(userid string, year string, month string) (check []Checkin, err error) {
+	o := orm.NewOrm()
+	o.QueryTable("checkin").RelatedSel().Filter("date__contains", year+"-"+month).Filter("Staff__UserId", userid).All(&check)
 	return check, nil
 }
 
