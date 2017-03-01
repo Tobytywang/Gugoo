@@ -1,216 +1,41 @@
 {{template "mobile/top.html" .}}
-	<h1>王天宇的打卡信息</h1>
-	<form action="" method="POST">
-		<select>
+	<h1>我的打卡记录</h1>
+	<form action="/checkin_m" method="POST">
+		<select id="year" name="year">
 		  <option value="2017">2017</option>
 		</select>
-		<select>
-		  <option value="1">1</option>
-		  <option value="2">2</option>
-		  <option value="3">3</option>
-		  <option value="4">4</option>
-		  <option value="1">5</option>
-		  <option value="2">6</option>
-		  <option value="3">7</option>
-		  <option value="4">8</option>
-		  <option value="1">9</option>
-		  <option value="2">10</option>
-		  <option value="3">11</option>
-		  <option value="4">12</option>
+		<select id="month" name="month">
+		  <option value="01">1</option>
+		  <option value="02">2</option>
+		  <option value="03">3</option>
+		  <option value="04">4</option>
+		  <option value="05">5</option>
+		  <option value="06">6</option>
+		  <option value="07">7</option>
+		  <option value="08">8</option>
+		  <option value="09">9</option>
+		  <option value="10">10</option>
+		  <option value="11">11</option>
+		  <option value="12">12</option>
 		</select>
-		<input type="submit" value="Submit">
+		<input type="submit" placeholder="查询" />
 	</form>
-	<table>
+	<table id="checkin">
 		<tr>
 			<th>日期</th>
 			<th>上午</th>
 			<th>下午</th>
 			<th>晚上</th>
 		</tr>
+		{{range .Checkin}}
 		<tr>
-			<td>1</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>未打卡</td>
+				<td>{{.Date}}</td>
+				<td>{{if compare .First 1 }}打卡{{else}}未打卡{{end}}</td>
+				<td>{{if compare .Second 1 }}打卡{{else}}未打卡{{end}}</td>
+				<td>{{if compare .Third 1 }}打卡{{else}}未打卡{{end}}</td>
 		</tr>
-		<tr>
-			<td>2</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>3</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-			<td>4</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>5</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>6</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>7</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-			<td>8</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>9</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>10</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>11</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-			<td>12</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>13</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>14</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>15</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-		</tr>
-			<td>16</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		<tr>
-		</tr>
-		<tr>
-			<td>17</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>18</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-			<td>19</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>20</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>21</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>22</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-			<td>23</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>24</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>25</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-		</tr>
-			<td>26</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		<tr>
-		</tr>
-		<tr>
-			<td>27</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>28</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-				<tr>
-			<td>29</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
-		<tr>
-			<td>30</td>
-			<td>打卡</td>
-			<td>打卡</td>
-			<td>打卡</td>
-		</tr>
+		{{end}}
 	</table>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 </body>
 </html>

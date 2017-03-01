@@ -9,6 +9,15 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var (
+	Fsh, _ = beego.AppConfig.Int("FirstStartHour")
+	Fsm, _ = beego.AppConfig.Int("FirstStartMinute")
+	Ssh, _ = beego.AppConfig.Int("SecondStartHour")
+	Ssm, _ = beego.AppConfig.Int("SecondStartMinute")
+	Tsh, _ = beego.AppConfig.Int("ThirdStartHour")
+	Tsm, _ = beego.AppConfig.Int("ThirdStartMinute")
+)
+
 // 打卡信息
 type Checkin struct {
 	Id     int
@@ -24,11 +33,37 @@ const (
 )
 
 // 查看所有打卡信息
-// 参数： 一个可以容纳这些打卡信息的slice
-// 返回： 无
-func LoadCheckin(clist *[]*Checkin) {
+// 参数： 无
+// 返回： 一个可以容纳所有结果的slice，错误信息
+func LoadCheckin() (check []Checkin, err error) {
 	o := orm.NewOrm()
-	o.QueryTable("checkin").All(clist)
+	beego.Debug("开始LoadCheckin")
+	o.QueryTable("checkin").RelatedSel().All(&check)
+	beego.Debug("结束LoadCheckin")
+	return check, nil
+}
+
+// 查看所有打卡信息
+// 参数： 无
+// 返回： 一个可以容纳所有结果的slice，错误信息
+func LoadCheckinByUserId(userid string) (check []Checkin, err error) {
+	o := orm.NewOrm()
+	beego.Debug("开始LoadCheckin")
+	o.QueryTable("checkin").RelatedSel().Filter("Staff__UserId", userid).All(&check)
+	beego.Debug("结束LoadCheckin")
+	return check, nil
+}
+
+func LoadCheckinByTime(year string, month string) (check []Checkin, err error) {
+	o := orm.NewOrm()
+	o.QueryTable("checkin").RelatedSel().Filter("date__contains", year+"-"+month).All(&check)
+	return check, nil
+}
+
+func LoadCheckinByTimeAndUserId(userid string, year string, month string) (check []Checkin, err error) {
+	o := orm.NewOrm()
+	o.QueryTable("checkin").RelatedSel().Filter("date__contains", year+"-"+month).Filter("Staff__UserId", userid).All(&check)
+	return check, nil
 }
 
 func GetTodayCheckinStateByUserid(userid string) (string, error) {
@@ -65,30 +100,21 @@ func GetTodayCheckinStateByUserid(userid string) (string, error) {
 //       -1.打卡失败或程序出错
 func Check(userid string) (flag int, err error) {
 	o := orm.NewOrm()
-	fsh, _ := beego.AppConfig.Int("FirstStartHour")
-	fsm, _ := beego.AppConfig.Int("FirstStartMinute")
 
-	fs, err := hm2m(fsh, fsm)
-	if err != nil {
-		return -1, err
-	}
-	ssh, _ := beego.AppConfig.Int("SecondStartHour")
-	ssm, _ := beego.AppConfig.Int("SecondStartMinute")
-	ss, err := hm2m(ssh, ssm)
-	if err != nil {
-		return -1, err
-	}
-	tsh, _ := beego.AppConfig.Int("ThirdStartHour")
-	tsm, _ := beego.AppConfig.Int("ThirdStartMinute")
-	ts, err := hm2m(tsh, tsm)
+	fs, err := hm2m(Fsh, Fsm)
 	if err != nil {
 		return -1, err
 	}
 
-	//测试用
-	//fs += 60
-	//ss += 60
-	//ts += 60
+	ss, err := hm2m(Ssh, Ssm)
+	if err != nil {
+		return -1, err
+	}
+
+	ts, err := hm2m(Tsh, Tsm)
+	if err != nil {
+		return -1, err
+	}
 
 	now := time.Now().Hour()*60 + time.Now().Minute()
 	beego.Debug(time.Now().Hour()*60 + time.Now().Minute())
@@ -104,44 +130,24 @@ func Check(userid string) (flag int, err error) {
 	var ch Checkin
 	beego.Debug(staff.Id)
 	err = o.QueryTable("checkin").Filter("staff_id", staff.Id).Filter("date", time.Now().Format("20060102")).One(&ch)
-	// beego.Debug(ch)
-	// beego.Debug(err)
-	// beego.Debug(reflect.TypeOf(orm.ErrNoRows))
 	beego.Debug(now, fs, ss, ts)
 	if err == orm.ErrNoRows {
 		beego.Debug("没有查到数据")
 		if now <= fs+PRE_TIME && now >= (fs-PRE_TIME) {
 			checkin.First = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("上午")
-				return 2, nil
-			}
 		} else if now <= ss+PRE_TIME && now >= (ss-PRE_TIME) {
 			checkin.Second = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("中午")
-				return 2, nil
-			}
 		} else if now <= ts+PRE_TIME && now >= (ts-PRE_TIME) {
 			checkin.Third = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("晚上")
-				beego.Debug(err)
-				beego.Debug(checkin)
-				beego.Debug(now)
-				return 2, nil
-			}
 		} else {
 			return 1, err
+		}
+		if _, err := o.Insert(checkin); err != nil {
+			beego.Debug(err)
+			return -1, err
+		} else {
+			beego.Debug(checkin)
+			return 2, nil
 		}
 	} else {
 		beego.Debug(ch)
@@ -197,6 +203,7 @@ func hm2m(hour int, minute int) (int, error) {
 	}
 }
 
+// 定义多字段唯一建
 func (c *Checkin) TableUnique() [][]string {
 	return [][]string{
 		[]string{"Staff", "Date"},

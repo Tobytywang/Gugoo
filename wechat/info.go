@@ -4,6 +4,7 @@ import "github.com/chanxuehong/wechat/corp/message/request"
 
 //咕咕科技企业号的各种信息
 const (
+	Domain = "http://luqi0119.cn:8080"
 	CorpId = "wx02c1979e62f43b58"
 	Secret = "jQ0wm3zRxEd1dZLgNwui5Zk_SBiuzizXLVTRUKSZXtGFM8xH1s2awmECgwoBiIZP"
 

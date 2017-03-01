@@ -41,7 +41,7 @@ func SaveStaff(staff *Staff) (number int, err error) {
 	}
 }
 
-// 根据ID查找员工
+// 根据UserID查找员工
 // 参数： 员工userid
 // 返回： 员工指针，错误信息
 func StaffByUserId(userid string) (s *Staff, err error) {
@@ -55,6 +55,21 @@ func StaffByUserId(userid string) (s *Staff, err error) {
 		return &staff, errors.New("没有该用户")
 	}
 }
+
+// 根据ID查找员工
+// 参数： 员工userid
+// 返回： 员工指针，错误信息
+// func StaffById(id int) (s *Staff, err error) {
+// 	o := orm.NewOrm()
+// 	var staff Staff
+// 	o.QueryTable("staff").Filter("id", id).One(&staff)
+//
+// 	if staff.Id != 0 {
+// 		return &staff, nil
+// 	} else {
+// 		return &staff, errors.New("没有该用户")
+// 	}
+// }
 
 //更新员工信息，很少用到
 func StaffUpdate(staff *Staff, fields ...string) error {

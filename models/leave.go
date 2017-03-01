@@ -71,7 +71,7 @@ func WaitingLeaveListGetByApprovedStaffId(userid string, state bool) (ls []*Leav
 
 //审批人审批后需要更新假条信息
 func LeaveUpdate(l *Leave, fields ...string) error {
-	_, err := orm.NewOrm().Update(l, fields)
+	_, err := orm.NewOrm().Update(l, fields...)
 	return err
 }
 

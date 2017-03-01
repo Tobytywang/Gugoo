@@ -10,8 +10,8 @@ type LeaveController struct {
 	beego.Controller
 }
 
-func (c *LeaveController) Prepare() {
-
+func (c *LeaveController) LeavePrepare() {
+	beego.Warn("in LeavePrepare")
 }
 
 func (c *LeaveController) MobileGet() {
