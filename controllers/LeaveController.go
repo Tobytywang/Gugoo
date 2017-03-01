@@ -33,10 +33,6 @@ func (c *LeaveController) AskForLeave() {
 			c.Redirect("/leave_for_leave", 302)
 		} else {
 			leave := models.Leave{}
-			// c.ParseForm(&leave)
-			start := c.GetString("start")
-			end := c.GetString("end")
-			beego.Debug(start, end)
 			//----------------------------------------------
 			// 请假人
 			leave.Staff, _ = models.StaffByUserId("123")
@@ -54,7 +50,6 @@ func (c *LeaveController) AskForLeave() {
 				c.Redirect("/leave_for_leave", 302)
 			}
 		}
-
 	} else {
 		flash = beego.ReadFromRequest(&c.Controller)
 		if _, ok := flash.Data["error"]; ok {
@@ -66,6 +61,8 @@ func (c *LeaveController) AskForLeave() {
 
 // 处理请假请求
 func (c *LeaveController) ApproveLeave() {
+	leaveid := c.GetString("leaveid")
+
 	c.TplName = "mobile/detail.html"
 }
 

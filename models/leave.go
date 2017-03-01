@@ -50,6 +50,18 @@ func LeaveGetById(lid int) (*Leave, error) {
 	return l, err
 }
 
+// 根据ID获得请假信息
+// func LoadLeaveById(id int)(llist []Leave, err error){
+// 	o := orm.NewOrm()
+// 	if id <= 0 {
+// 		return nil, errors.New("错误的ID请求")
+// 	} else {
+// 		var leave Leave
+// 		o.QueryTable("leaves").Filter("id", id).One(&leave)
+// 		if
+// 	}
+// }
+
 //根据申请人userId查询请假记录
 func LeaveListGetByAskStaffId(userid string) ([]*Leave, error) {
 	ls := make([]*Leave, 0)
