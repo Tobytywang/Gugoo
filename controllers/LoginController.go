@@ -7,16 +7,18 @@ import (
 )
 
 type LoginController struct {
-	BaseController
+	//BaseController
+	beego.Controller
 }
 
 func (c *LoginController) Login() {
 	beego.Debug("in login")
 	requestURI := c.Ctx.Request.RequestURI
 	beego.Debug(requestURI)
-
+	errMsg := "没有权限！"
 	//微信企业号登陆入口
 	code := c.GetString("code")
+	firstRequestURI := c.GetString("first")
 	beego.Debug(code)
 
 	if len(code) > 0 {
@@ -24,15 +26,14 @@ func (c *LoginController) Login() {
 		if userId != "" && deviceId != "" && err == nil {
 			c.SetSession("UserId", userId)
 			beego.Debug(userId, deviceId)
-			c.Redirect("/checkin_m", 302)
+			beego.Debug(firstRequestURI)
+			c.Redirect(firstRequestURI, 302)
 			return
 		}
-		beego.Error("未通过微信验证！")
-		return
+		errMsg = "未通过微信验证！"
 	}
-	redirectURL := wechat.GetAuthCodeURL(wechat.Domain + "/login")
 
-	beego.Debug(redirectURL)
-
-	c.Redirect(redirectURL, 302)
+	c.Data["json"] = &map[string]interface{}{"error": errMsg}
+	c.ServeJSON()
+	c.StopRun()
 }

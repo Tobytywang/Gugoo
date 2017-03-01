@@ -15,21 +15,21 @@ type CheckinController struct {
 }
 
 func (c *CheckinController) CheckinPrepare() {
-	beego.Warn("in CheckinPrepare")
+	beego.Debug("in CheckinPrepare")
 }
 
 func (c *CheckinController) MobileGet() {
 	if c.Ctx.Input.IsPost() {
 
 		time := strings.Split(c.GetString("time"), " ")
-		Clist, _ := models.LoadCheckinByTimeAndUserId("123", time[0], time[1])
+		Clist, _ := models.LoadCheckinByTimeAndUserId(c.UserId, time[0], time[1])
 		c.Data["Checkin"] = Clist
 		beego.Debug("是POST方法")
 	} else {
 		beego.Debug(reflect.TypeOf(c.Ctx.Input.IsPost()))
 		beego.Debug("是GET方法")
 		beego.Debug(fmt.Sprintf("%d", time.Now().Year()), fmt.Sprintf("%02d", time.Now().Month()))
-		Clist, _ := models.LoadCheckinByTimeAndUserId("67", fmt.Sprintf("%d", time.Now().Year()), fmt.Sprintf("%02d", time.Now().Month()))
+		Clist, _ := models.LoadCheckinByTimeAndUserId(c.UserId, fmt.Sprintf("%d", time.Now().Year()), fmt.Sprintf("%02d", time.Now().Month()))
 		c.Data["Checkin"] = Clist
 
 	}

@@ -24,11 +24,10 @@ type CheckinPrepare interface {
 }
 
 func (c *BaseController) Prepare() {
+	beego.Debug("in prepare")
+	c.CheckLogin()
 
-	//c.CheckLogin()
-
-	beego.Debug(c.UserId, c.UserName)
-
+	//AppController表示当前子类是哪个Controller
 	switch app := c.AppController.(type) {
 	case LeavePrepare:
 		app.LeavePrepare()
@@ -41,29 +40,12 @@ func (c *BaseController) CheckLogin() {
 	isLogin := c.GetSession("UserId")
 	beego.Debug(isLogin)
 	if isLogin == nil || isLogin.(string) == "" {
-		//beego.Debug("跳转login")
-		//c.Redirect(beego.URLFor("LoginController.Login"), 302)
 		beego.Debug("第一次登陆")
-		requestURI := c.Ctx.Request.RequestURI
-		beego.Debug(requestURI)
+		firstRequestURI := c.Ctx.Request.RequestURI //记住用户从哪个uri进入的，跳到login界面后，方便跳回来
+		beego.Debug(firstRequestURI)
 
-		//微信企业号登陆入口
-		code := c.GetString("code")
-
-		if len(code) > 0 {
-			userId, deviceId, err := wechat.GetUserInfo(code)
-			if userId != "" && deviceId != "" && err == nil {
-				c.SetSession("UserId", userId)
-				beego.Debug(userId, deviceId)
-				return
-			}
-			beego.Error("未通过微信验证！")
-			return
-		}
-		redirectURL := wechat.GetAuthCodeURL(wechat.Domain + "/login")
-		//redirectURL := c.URLFor("LoginController.Login")
-		beego.Debug("redirectURL", redirectURL)
-		//wechat.SendText("67", redirectURL)
+		redirectURL := wechat.GetAuthCodeURL(wechat.Domain + "/login?first=" + firstRequestURI)
+		//beego.Debug("redirectURL", redirectURL)
 		c.Redirect(redirectURL, 302)
 		return
 	}

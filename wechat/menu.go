@@ -76,6 +76,9 @@ func GetUserInfo(code string) (string, string, error) {
 	//网页获取用户信息
 	oauth2Client := (*oauth2.Client)(corpClient)
 	userInfo, err := oauth2Client.UserInfo(HelperAgentId, code)
+	if err != nil {
+		return "", "", err
+	}
 	log.Println("GetUserInfo", err)
 	return userInfo.UserId, userInfo.DeviceId, err
 }
