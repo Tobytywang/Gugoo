@@ -40,7 +40,7 @@ func (c *BaseController) Prepare() {
 func (c *BaseController) CheckLogin() {
 	isLogin := c.GetSession("UserId")
 	beego.Debug(isLogin)
-	if isLogin == nil || isLogin.(int) <= 0 {
+	if isLogin == nil || isLogin.(string) == "" {
 		//beego.Debug("跳转login")
 		//c.Redirect(beego.URLFor("LoginController.Login"), 302)
 		beego.Debug("第一次登陆")
@@ -60,7 +60,10 @@ func (c *BaseController) CheckLogin() {
 			beego.Error("未通过微信验证！")
 			return
 		}
-		redirectURL := wechat.GetAuthCodeURL(beego.URLFor("LoginController.Login"))
+		redirectURL := wechat.GetAuthCodeURL(wechat.Domain + "/login")
+		//redirectURL := c.URLFor("LoginController.Login")
+		beego.Debug("redirectURL", redirectURL)
+		//wechat.SendText("67", redirectURL)
 		c.Redirect(redirectURL, 302)
 		return
 	}

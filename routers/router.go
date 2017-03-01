@@ -8,6 +8,7 @@ import (
 
 func init() {
 	//beego.Router("/", &controllers.MainController{})
+	beego.Router("/login", &controllers.LoginController{}, "get:Login")
 
 	// 打卡信息
 	beego.Router("/checkin", &controllers.CheckinController{}, "get:PcGet")

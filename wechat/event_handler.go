@@ -58,7 +58,6 @@ func UnSubscribeEventHandler(w http.ResponseWriter, r *corp.Request) {
 	msg := unsubscribe.FromUserName + "已取消对咕咕微信企业号的关注！"
 	log.Println(msg)
 	UpdateStaffInfo() //数据库的staff不删，以免手误取消关注后，对应的打卡记录、请假历史全部被删掉
-	SendText("67", msg)
 }
 
 // 点击事件的handler
