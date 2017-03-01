@@ -24,11 +24,20 @@ const (
 )
 
 // 查看所有打卡信息
-// 参数： 一个可以容纳这些打卡信息的slice
-// 返回： 无
-func LoadCheckin(clist *[]*Checkin) {
+// 参数： 无
+// 返回： 一个可以容纳所有结果的slice，错误信息
+func LoadCheckin() (check []Checkin, err error) {
 	o := orm.NewOrm()
-	o.QueryTable("checkin").All(clist)
+	beego.Debug("开始LoadCheckin")
+	o.QueryTable("checkin").RelatedSel().All(&check)
+	beego.Debug("结束LoadCheckin")
+	return check, nil
+}
+
+func LoadCheckinByTime(year string, month string) (check []Checkin, err error) {
+	o := orm.NewOrm()
+	o.QueryTable("checkin").RelatedSel().Filter("Date_contains", year+"-"+"month").All(&check)
+	return check, nil
 }
 
 func GetTodayCheckinStateByUserid(userid string) (string, error) {
@@ -67,7 +76,6 @@ func Check(userid string) (flag int, err error) {
 	o := orm.NewOrm()
 	fsh, _ := beego.AppConfig.Int("FirstStartHour")
 	fsm, _ := beego.AppConfig.Int("FirstStartMinute")
-
 	fs, err := hm2m(fsh, fsm)
 	if err != nil {
 		return -1, err
@@ -85,11 +93,6 @@ func Check(userid string) (flag int, err error) {
 		return -1, err
 	}
 
-	//测试用
-	//fs += 60
-	//ss += 60
-	//ts += 60
-
 	now := time.Now().Hour()*60 + time.Now().Minute()
 	beego.Debug(time.Now().Hour()*60 + time.Now().Minute())
 
@@ -104,30 +107,13 @@ func Check(userid string) (flag int, err error) {
 	var ch Checkin
 	beego.Debug(staff.Id)
 	err = o.QueryTable("checkin").Filter("staff_id", staff.Id).Filter("date", time.Now().Format("20060102")).One(&ch)
-	// beego.Debug(ch)
-	// beego.Debug(err)
-	// beego.Debug(reflect.TypeOf(orm.ErrNoRows))
 	beego.Debug(now, fs, ss, ts)
 	if err == orm.ErrNoRows {
 		beego.Debug("没有查到数据")
 		if now <= fs+PRE_TIME && now >= (fs-PRE_TIME) {
 			checkin.First = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("上午")
-				return 2, nil
-			}
 		} else if now <= ss+PRE_TIME && now >= (ss-PRE_TIME) {
 			checkin.Second = 1
-			if _, err := o.Insert(checkin); err != nil {
-				beego.Debug(err)
-				return -1, err
-			} else {
-				beego.Debug("中午")
-				return 2, nil
-			}
 		} else if now <= ts+PRE_TIME && now >= (ts-PRE_TIME) {
 			checkin.Third = 1
 		} else {
@@ -194,6 +180,7 @@ func hm2m(hour int, minute int) (int, error) {
 	}
 }
 
+// 定义多字段唯一建
 func (c *Checkin) TableUnique() [][]string {
 	return [][]string{
 		[]string{"Staff", "Date"},

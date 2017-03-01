@@ -28,7 +28,7 @@ func main() {
 	//wechat.SendText("67|HappyLich", "企业号主动给你发消息了～～～")
 	wechat.LocationMap = make(map[string]request.LocationEvent)
 	//wechat.UpdateStaffInfo()
-	go wechat.Wechat()
+	// go wechat.Wechat()
 
 	//user1 := new(models.Staff)
 	//user1.Id = 1
