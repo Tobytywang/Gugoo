@@ -4,6 +4,7 @@ import (
 	"Gugoo/models"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/astaxie/beego"
@@ -19,7 +20,8 @@ func (c *CheckinController) Prepare() {
 
 func (c *CheckinController) MobileGet() {
 	if c.Ctx.Input.IsPost() {
-		Clist, _ := models.LoadCheckinByTimeAndUserId("123", c.GetString("year"), c.GetString("month"))
+		time := strings.Split(c.GetString("time"), " ")
+		Clist, _ := models.LoadCheckinByTimeAndUserId("123", time[0], time[1])
 		c.Data["Checkin"] = Clist
 		beego.Debug("是POST方法")
 	} else {
