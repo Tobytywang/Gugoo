@@ -11,7 +11,7 @@ func init() {
 
 	// 打卡信息
 	beego.Router("/checkin", &controllers.CheckinController{}, "get:PcGet")
-	beego.Router("/checkin_m", &controllers.CheckinController{}, "get:MobileGet")
+	beego.Router("/checkin_m", &controllers.CheckinController{}, "get,post:MobileGet")
 
 	// 请假信息
 	beego.Router("/leave", &controllers.LeaveController{}, "get:PcGet")

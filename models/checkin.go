@@ -9,6 +9,15 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var (
+	Fsh, _ = beego.AppConfig.Int("FirstStartHour")
+	Fsm, _ = beego.AppConfig.Int("FirstStartMinute")
+	Ssh, _ = beego.AppConfig.Int("SecondStartHour")
+	Ssm, _ = beego.AppConfig.Int("SecondStartMinute")
+	Tsh, _ = beego.AppConfig.Int("ThirdStartHour")
+	Tsm, _ = beego.AppConfig.Int("ThirdStartMinute")
+)
+
 // 打卡信息
 type Checkin struct {
 	Id     int
@@ -36,7 +45,7 @@ func LoadCheckin() (check []Checkin, err error) {
 
 func LoadCheckinByTime(year string, month string) (check []Checkin, err error) {
 	o := orm.NewOrm()
-	o.QueryTable("checkin").RelatedSel().Filter("Date_contains", year+"-"+"month").All(&check)
+	o.QueryTable("checkin").RelatedSel().Filter("date__contains", year+"-"+month).All(&check)
 	return check, nil
 }
 
@@ -74,21 +83,18 @@ func GetTodayCheckinStateByUserid(userid string) (string, error) {
 //       -1.打卡失败或程序出错
 func Check(userid string) (flag int, err error) {
 	o := orm.NewOrm()
-	fsh, _ := beego.AppConfig.Int("FirstStartHour")
-	fsm, _ := beego.AppConfig.Int("FirstStartMinute")
-	fs, err := hm2m(fsh, fsm)
+
+	fs, err := hm2m(Fsh, Fsm)
 	if err != nil {
 		return -1, err
 	}
-	ssh, _ := beego.AppConfig.Int("SecondStartHour")
-	ssm, _ := beego.AppConfig.Int("SecondStartMinute")
-	ss, err := hm2m(ssh, ssm)
+
+	ss, err := hm2m(Ssh, Ssm)
 	if err != nil {
 		return -1, err
 	}
-	tsh, _ := beego.AppConfig.Int("ThirdStartHour")
-	tsm, _ := beego.AppConfig.Int("ThirdStartMinute")
-	ts, err := hm2m(tsh, tsm)
+
+	ts, err := hm2m(Tsh, Tsm)
 	if err != nil {
 		return -1, err
 	}

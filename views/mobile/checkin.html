@@ -1,23 +1,24 @@
 {{template "mobile/top.html" .}}
 	<h1>王天宇的打卡信息</h1>
-	<form>
-		<select id="year">
+	<form action="/checkin_m" method="POST">
+		<select id="year" name="year">
 		  <option value="2017">2017</option>
 		</select>
-		<select id="month">
-		  <option value="1">1</option>
-		  <option value="2">2</option>
-		  <option value="3">3</option>
-		  <option value="4">4</option>
-		  <option value="1">5</option>
-		  <option value="2">6</option>
-		  <option value="3">7</option>
-		  <option value="4">8</option>
-		  <option value="1">9</option>
-		  <option value="2">10</option>
-		  <option value="3">11</option>
-		  <option value="4">12</option>
+		<select id="month" name="month">
+		  <option value="01">1</option>
+		  <option value="02">2</option>
+		  <option value="03">3</option>
+		  <option value="04">4</option>
+		  <option value="05">5</option>
+		  <option value="06">6</option>
+		  <option value="07">7</option>
+		  <option value="08">8</option>
+		  <option value="09">9</option>
+		  <option value="10">10</option>
+		  <option value="11">11</option>
+		  <option value="12">12</option>
 		</select>
+		<input type="submit" placeholder="查询" />
 	</form>
 	<table id="checkin">
 		<tr>

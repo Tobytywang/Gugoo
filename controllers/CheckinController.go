@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"Gugoo/models"
+	"reflect"
 
 	"github.com/astaxie/beego"
 )
@@ -15,16 +16,16 @@ func (c *CheckinController) Prepare() {
 }
 
 func (c *CheckinController) MobileGet() {
-	if c.Ctx.Input.IsAjax() {
-		clist, _ := models.LoadCheckinByTime(c.GetString("year"), c.GetString("month"))
-		c.Data["Checkin"] = clist
-		beego.Debug("处理ajax")
-		c.ServeJSON()
-		// c.StopRun()
+	if c.Ctx.Input.IsPost() {
+		Clist, _ := models.LoadCheckinByTime(c.GetString("year"), c.GetString("month"))
+		c.Data["Checkin"] = Clist
+		beego.Debug("是POST方法")
 	} else {
-		beego.Debug("不是AJAX")
-		clist, _ := models.LoadCheckin()
-		c.Data["Checkin"] = clist
+		beego.Debug(reflect.TypeOf(c.Ctx.Input.IsPost()))
+		beego.Debug("是GET方法")
+		Clist, _ := models.LoadCheckin()
+		c.Data["Checkin"] = Clist
+
 	}
 
 	c.TplName = "mobile/checkin.html"
