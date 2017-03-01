@@ -1,41 +1,70 @@
-{{template "mobile/top.html" .}}
-	<h1>我的打卡记录</h1>
-	<form action="/checkin_m" method="POST">
-		<select id="year" name="year">
-		  <option value="2017">2017</option>
-		</select>
-		<select id="month" name="month">
-		  <option value="01">1</option>
-		  <option value="02">2</option>
-		  <option value="03">3</option>
-		  <option value="04">4</option>
-		  <option value="05">5</option>
-		  <option value="06">6</option>
-		  <option value="07">7</option>
-		  <option value="08">8</option>
-		  <option value="09">9</option>
-		  <option value="10">10</option>
-		  <option value="11">11</option>
-		  <option value="12">12</option>
-		</select>
-		<input type="submit" placeholder="查询" />
-	</form>
-	<table id="checkin">
-		<tr>
-			<th>日期</th>
-			<th>上午</th>
-			<th>下午</th>
-			<th>晚上</th>
-		</tr>
-		{{range .Checkin}}
-		<tr>
-				<td>{{.Date}}</td>
-				<td>{{if compare .First 1 }}打卡{{else}}未打卡{{end}}</td>
-				<td>{{if compare .Second 1 }}打卡{{else}}未打卡{{end}}</td>
-				<td>{{if compare .Third 1 }}打卡{{else}}未打卡{{end}}</td>
-		</tr>
-		{{end}}
-	</table>
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+  <link rel="stylesheet" href="/static/css/weui.css"/>
+  <link rel="stylesheet" href="/static/css/weui2.css"/>
+  <link rel="stylesheet" href="/static/css/weui3.css"/>
+      <script src="/static/js/zepto.min.js"></script><script src="/static/js/picker.js"></script>
+      <script>
+  $(function(){
+    $("#time").picker({title:"选择时间",
+      cols: [
+        {
+          textAlign: 'center',
+          values: (function () {
+            var arr = [];
+            for (var i = 2017; i <= 2017; i++) { arr.push(i < 10 ? '0' + i : i); }
+            return arr;
+          })()
+        },
+        {
+          textAlign: 'center',
+          values:  (function () {
+            var arr = [];
+            for (var i = 1; i <= 12; i++) { arr.push(i < 10 ? '0' + i : i); }
+            return arr;
+          })(),
+        }
+    ]});
+  });
+      </script>
+</head>
+
+<body ontouchstart style="background-color: #f8f8f8;">
+<div class="page-hd">
+        <h1 class="page-hd-title">我的打卡信息</h1>
+</div>
+<table class="weui-table weui-border-tb">
+  <tr>
+    <th>日期</th>
+    <th>上午</th>
+    <th>下午</th>
+    <th>晚上</th>
+  </tr>
+  {{range .Checkin}}
+  <tr>
+      <td>{{.Date}}</td>
+      <td>{{if compare .First 1}}打卡{{else}}未打卡{{end}}</td>
+      <td>{{if compare .Second 1}}打卡{{else}}未打卡{{end}}</td>
+      <td>{{if compare .Third 1}}打卡{{else}}未打卡{{end}}</td>
+  </tr>
+  {{end}}
+</table>
+<form id="form" action="/checkin_m" method="POST">
+  <div class="weui_cells weui_cells_form ">
+    <div class="weui_cell">
+      <div class="weui_cell_hd"><label for="" class="weui_label">时间：</label></div>
+      <div class="weui_cell_bd weui_cell_primary">
+        <input class="weui_input" type="text" value="2017 01" id='time' name="time"/>
+      </div>
+    </div>
+  </div>
+  <div class="weui_btn_area">
+    <button id="formSubmitBtn" type="submit" class="weui_btn weui_btn_primary">提交</a>
+  </div>
+</form>
 </body>
 </html>

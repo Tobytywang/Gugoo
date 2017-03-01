@@ -25,7 +25,7 @@ type CheckinPrepare interface {
 
 func (c *BaseController) Prepare() {
 
-	c.CheckLogin()
+	//c.CheckLogin()
 
 	beego.Debug(c.UserId, c.UserName)
 
