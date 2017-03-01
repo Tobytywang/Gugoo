@@ -15,8 +15,11 @@ func init() {
 	beego.Router("/checkin_m", &controllers.CheckinController{}, "get,post:MobileGet")
 
 	// 请假信息
-	beego.Router("/leave", &controllers.LeaveController{}, "get:PcGet")
-	beego.Router("/leave_m", &controllers.LeaveController{}, "get:MobileGet")
-	beego.Router("/leave_asf", &controllers.LeaveController{}, "get,post:AskForLeave")
+	beego.Router("/leave_details", &controllers.LeaveController{}, "get:PcGet")
+	beego.Router("/leave_details_m", &controllers.LeaveController{}, "get:MobileGet")
 
+	beego.Router("/leave_my", &controllers.LeaveController{}, "get:LeaveHistroy")
+
+	beego.Router("/leave_for_leave", &controllers.LeaveController{}, "get,post:AskForLeave")
+	beego.Router("/leave_appr_leave", &controllers.LeaveController{}, "get,post:ApproveLeave")
 }

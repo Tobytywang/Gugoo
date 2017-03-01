@@ -20,7 +20,6 @@ func (c *CheckinController) CheckinPrepare() {
 
 func (c *CheckinController) MobileGet() {
 	if c.Ctx.Input.IsPost() {
-
 		time := strings.Split(c.GetString("time"), " ")
 		Clist, _ := models.LoadCheckinByTimeAndUserId("123", time[0], time[1])
 		c.Data["Checkin"] = Clist

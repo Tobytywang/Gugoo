@@ -10,13 +10,13 @@ import (
 // 请假信息
 type Leave struct {
 	Id            int
-	Staff         *Staff    `orm:"rel(fk);on_delete(cascade)"`       // 用户ID
-	ApprovedBy    *Staff    `orm:"null;rel(fk);on_delete(set_null)"` // 审批人ID
-	DateAsk       time.Time `orm:"type(datetime)"`                   // 申请时间
-	DateOk        time.Time `orm:"type(datetime)"`                   // 审批时间
-	DateStart     time.Time `orm:"type(datetime)"`                   // 请假开始时间
-	DateEnd       time.Time `orm:"type(datetime)"`                   // 请假结束时间
-	Reason        string    //请假理由
+	Staff         *Staff    `orm:"rel(fk);on_delete(cascade)"form:"whoask"`        // 用户ID
+	ApprovedBy    *Staff    `orm:"null;rel(fk);on_delete(set_null)"form:"whoappr"` // 审批人ID
+	DateAsk       time.Time `orm:"type(datetime)"`                                 // 申请时间
+	DateOk        time.Time `orm:"null;type(datetime)"`                            // 审批时间
+	DateStart     time.Time `orm:"type(datetime)"form:"start"`                     // 请假开始时间
+	DateEnd       time.Time `orm:"type(datetime)"form:"end"`                       // 请假结束时间
+	Reason        string    `form:"reason"`                                        //请假理由
 	ApprovedState int       //审批状态，0：待审批，-1：审批不通过，1：审批通过
 }
 

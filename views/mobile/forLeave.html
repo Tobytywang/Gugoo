@@ -37,13 +37,14 @@
 </head>
 <body>
 <h1>请假单</h1>
-<form action="" method="get">
-    请 假 人 ：<input type="text"><br>
-    起始时间：<input type="datetime-local" name="beginTime"><br>
-    结束时间：<input type="datetime-local" name="endTime"><br>
-    请假原因：<textarea></textarea><br>
+{{if .Error}}<p>{{.flash.error}}<p>{{end}}
+<form id="leave" action="/leave_for_leave" method="POST">
+    <!-- 请 假 人 ：<input type="text" name="whoask"><br>-->
+    起始时间：<input type="datetime-local" name="start"><br>
+    结束时间：<input type="datetime-local" name="end"><br>
+    请假原因：<textarea name="reason"></textarea><br>
     审批人：
-    <select name="leaders">
+    <select name="whoappr">
         <option value="黄凯">黄 凯</option>
         <option value="周嫄">周 嫄</option>
     </select>

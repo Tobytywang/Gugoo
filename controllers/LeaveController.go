@@ -2,51 +2,74 @@ package controllers
 
 import (
 	"Gugoo/models"
+	"time"
 
 	"github.com/astaxie/beego"
 )
 
 type LeaveController struct {
-	beego.Controller
+	BaseController
 }
 
 func (c *LeaveController) LeavePrepare() {
 	beego.Warn("in LeavePrepare")
 }
 
+// 移动端和PC端查看请假信息
 func (c *LeaveController) MobileGet() {
-	c.TplName = "mobile/leave.html"
+	c.TplName = "mobile/approvalRecord.html"
 }
-
 func (c *LeaveController) PcGet() {
 	c.TplName = "pc/leave.html"
 }
 
-//请假入口
+// 发起请假请求
 func (c *LeaveController) AskForLeave() {
+	flash := beego.NewFlash()
+	if c.Ctx.Input.IsPost() {
+		if c.GetString("reason") == "" || c.GetString("start") == "" || c.GetString("end") == "" {
+			flash.Error("提交的信息不能为空！")
+			flash.Store(&c.Controller)
+			c.Redirect("/leave_for_leave", 302)
+		} else {
+			leave := models.Leave{}
+			// c.ParseForm(&leave)
+			start := c.GetString("start")
+			end := c.GetString("end")
+			beego.Debug(start, end)
+			//----------------------------------------------
+			// 请假人
+			leave.Staff, _ = models.StaffByUserId("123")
+			// 批准人
+			leave.ApprovedBy, _ = models.StaffByUserId("123")
+			leave.DateAsk = time.Now()
+			leave.DateOk = leave.DateAsk
+			leave.DateStart = c.GetTime(c.GetString("start"))
+			leave.DateEnd = c.GetTime(c.GetString("end"))
+			//---------------------------------------------
+			err := models.LeaveAdd(&leave)
+			if err != nil {
+				flash.Error("提交的信息有误，请核对后再次提交！")
+				flash.Store(&c.Controller)
+				c.Redirect("/leave_for_leave", 302)
+			}
+		}
 
-	leave := new(models.Leave)
-
-	err := models.LeaveAdd(leave)
-	if err != nil {
-
+	} else {
+		flash = beego.ReadFromRequest(&c.Controller)
+		if _, ok := flash.Data["error"]; ok {
+			c.Data["Error"] = true
+		}
 	}
-	beego.Debug(err)
-
-	c.TplName = "mobile/askforleave.html"
+	c.TplName = "mobile/forLeave.html"
 }
 
-//待审批入口，审批人在这里审批，然后更新假条信息
-func (c *LeaveController) WaitApprove() {
-	c.TplName = "mobile/askforleave.html"
+// 处理请假请求
+func (c *LeaveController) ApproveLeave() {
+	c.TplName = "mobile/detail.html"
 }
 
-//已审批入口，审批人查看审批记录
-func (c *LeaveController) ApprovedHistoryLeave() {
-	c.TplName = "mobile/askforleave.html"
-}
-
-//查看请假记录入口
+// 查看我的请假历史
 func (c *LeaveController) LeaveHistroy() {
-	c.TplName = "mobile/askforleave.html"
+	c.TplName = "mobile/approvalRecord.html"
 }

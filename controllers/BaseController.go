@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"Gugoo/models"
+	"strconv"
+	"time"
 
 	"Gugoo/wechat"
 
@@ -76,4 +78,30 @@ func (c *BaseController) CheckLogin() {
 		c.UserId = uid
 		c.UserName = staff.Name
 	}
+}
+
+// 时间格式化函数
+// 参数2017-03-03T14:02
+func (c *BaseController) GetTime(ti string) time.Time {
+	beego.Debug(ti)
+	year, _ := strconv.Atoi(c.Substr(ti, 0, 4))
+	month, _ := strconv.Atoi(c.Substr(ti, 5, 7))
+	day, _ := strconv.Atoi(c.Substr(ti, 8, 10))
+	hour, _ := strconv.Atoi(c.Substr(ti, 11, 13))
+	minute, _ := strconv.Atoi(c.Substr(ti, 14, 16))
+	beego.Debug(year, "-", month, "-", day, "-", hour, "-", minute)
+	return time.Date(year, time.Month(month), day, hour, minute, 0, 0, time.Local)
+}
+
+func (c *BaseController) Substr(str string, start int, end int) string {
+	rs := []rune(str)
+	length := len(rs)
+	if start < 0 || start > length {
+		return "0"
+	}
+	if end < 0 || end > length {
+		return "0"
+	}
+	// beego.Debug(string(rs[start:end]))
+	return string(rs[start:end])
 }
