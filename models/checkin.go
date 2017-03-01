@@ -37,7 +37,7 @@ func GetTodayCheckinStateByUserid(userid string) (string, error) {
 	var state string = "今日打卡情况\n\n"
 	staff, err := StaffByUserId(userid)
 	if err != nil {
-		return "不存在该用户", err
+		return "数据库不存在该用户", err
 	}
 	err = o.QueryTable("checkin").Filter("staff_id", staff.Id).Filter("date", time.Now().Format("20060102")).One(&ch)
 

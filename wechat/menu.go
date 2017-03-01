@@ -89,6 +89,6 @@ func SendText(userid, content string) {
 	text.MessageHeader = *msgheader
 	text.Text.Content = content
 
-	r, err := sendClient.SendText(text)
-	log.Println(*r, err)
+	_, err := sendClient.SendText(text)
+	log.Println(text, err)
 }

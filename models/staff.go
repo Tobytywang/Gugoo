@@ -17,6 +17,10 @@ type Staff struct {
 	Mobile     string `orm:"unique"json:"mobile,omitempty"`   // 非必须; 手机号码. 企业内必须唯一, mobile/weixinid/email三者不能同时为空
 	Email      string `orm:"unique"json:"email,omitempty"`    // 非必须; 邮箱. 长度为0~64个字符. 企业内必须唯一
 	WeixinId   string `orm:"unique"json:"weixinid,omitempty"` // 非必须; 微信号. 企业内必须唯一. (注意: 是微信号, 不是微信的名字)
+
+	Checkin      []*Checkin `orm:"reverse(many)"` //我的打卡信息
+	Leave        []*Leave   `orm:"reverse(many)"` //我的假条
+	ApproveLeave []*Leave   `orm:"reverse(many)"` //对应待我审批的假条
 }
 
 // 读取函数，从数据库里读出所有的成员

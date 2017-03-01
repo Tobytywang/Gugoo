@@ -38,6 +38,7 @@ func EarthDistance(lat1, lng1, lat2, lng2 float64) float64 {
 func LocationEventHandler(w http.ResponseWriter, r *corp.Request) {
 	location := request.GetLocationEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	LocationMap[location.FromUserName] = *location
+	//log.Println(EarthDistance(LocationX, LocationY, location.Latitude, location.Longitude))
 }
 
 // 订阅事件的 Handler
@@ -45,6 +46,7 @@ func SubscribeEventHandler(w http.ResponseWriter, r *corp.Request) {
 	subscribe := request.GetSubscribeEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	fmt.Println(subscribe)
 	resp := response.NewText(subscribe.FromUserName, subscribe.ToUserName, subscribe.CreateTime, "欢迎关注Gugoo微信企业号～～～")
+	UpdateStaffInfo()
 	SendText("67", subscribe.FromUserName+"已关注咕咕微信企业号！")
 	corp.WriteResponse(w, r, resp)
 }
@@ -55,6 +57,7 @@ func UnSubscribeEventHandler(w http.ResponseWriter, r *corp.Request) {
 	unsubscribe := request.GetUnsubscribeEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	msg := unsubscribe.FromUserName + "已取消对咕咕微信企业号的关注！"
 	log.Println(msg)
+	UpdateStaffInfo() //数据库的staff不删，以免手误取消关注后，对应的打卡记录、请假历史全部被删掉
 	SendText("67", msg)
 }
 
@@ -69,16 +72,16 @@ func ClickEventHandler(w http.ResponseWriter, r *corp.Request) {
 		//缓存的位置信息超过30秒，不算
 		if time.Now().Unix()-loc.CreateTime > 30 {
 			msg = "打卡失败\n\n尚未获取到你当前的位置信息，请检查是否已允许提供位置信息并重试！"
-		} else if distance > 50 { //将打卡距离设置为50米
-			msg = "打卡失败\n\n时间：" + time.Unix(loc.CreateTime, 0).Format("2006-01-02 15:04:05") + "\n距离：" + fmt.Sprint(distance) + "米\n\n距离工作室太远，请进入工作室再重试！"
+		} else if distance > 100 { //将打卡距离设置为100米
+			msg = "打卡失败\n\n时间：" + time.Unix(loc.CreateTime, 0).Format("2006-01-02 15:04:05") + "\n距离：" + fmt.Sprint(distance) + "米\n\n距离太远，请进入工作室再重试！"
 		} else {
 			state, _ := models.Check(click.FromUserName)
 			switch {
 			case state == 1:
-				msg = "不在打卡时间，请在以下时间打卡\n\n上午：8:30到9:30\n下午：1:00到2:00\n晚上：6:00到7:00"
+				msg = "不在打卡时间，请在以下时间打卡\n\n上午：08:30-09:30\n下午：13:00-14:00\n晚上：18:00-19:00"
 				break
 			case state == 3: //已打过卡
-				msg = "已打过卡，请勿重复操作！"
+				msg = "已打过卡，请勿重复操作！\n\n距离：" + fmt.Sprint(distance) + "米"
 				break
 			case state == -1: //在工作室附近，后台数据库insert失败
 				msg = "打卡失败\n在工作室附近，后台数据库保存失败，请联系后台开发人员（卢琦或王天宇）"
