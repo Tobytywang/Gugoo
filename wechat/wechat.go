@@ -1,8 +1,7 @@
 package wechat
 
 import (
-	"net/http"
-
+	"github.com/astaxie/beego"
 	"github.com/chanxuehong/wechat/corp"
 	"github.com/chanxuehong/wechat/corp/menu"
 	"github.com/chanxuehong/wechat/corp/message/request"
@@ -31,6 +30,7 @@ func Wechat() {
 	// 如果你在微信后台设置的回调地址是
 	//   http://xxx.yyy.zzz/agent
 	// 那么可以这么注册 http.Handler
-	http.Handle(HelperUrl, agentServerFrontend)
-	http.ListenAndServe(HelperPort, nil)
+	beego.Handler(HelperUrl, agentServerFrontend)
+	//http.Handle(HelperUrl, agentServerFrontend)
+	//http.ListenAndServe(HelperPort, nil)
 }

@@ -26,10 +26,10 @@ func main() {
 	//orm.RunSyncdb("default", false, true)
 
 	//wechat.CreateMenu() //修改菜单时用一次就好
-	//wechat.PrintMenu()
+	wechat.PrintMenu()
 
 	wechat.LocationMap = make(map[string]request.LocationEvent)
-	go wechat.Wechat()
+	wechat.Wechat()
 
 	beego.Run()
 }

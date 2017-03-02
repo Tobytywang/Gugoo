@@ -29,7 +29,7 @@ func (c *LeaveController) AskForLeave() {
 	if c.Ctx.Input.IsPost() {
 		flash := beego.NewFlash()
 		if c.GetString("reason") == "" || c.GetString("start") == "" || c.GetString("end") == "" {
-			flash.Error("提交的信息不能为空！")
+			flash.Error("提交的信息不能为空，请重试！")
 			flash.Store(&c.Controller)
 			c.Redirect("/leave_for_leave", 302)
 		} else {
@@ -55,7 +55,7 @@ func (c *LeaveController) AskForLeave() {
 				beego.Debug("申请成功！")
 				flash.Notice("申请成功，请耐心等待审批！")
 				flash.Store(&c.Controller)
-				//wechat.SendText(leave.ApprovedBy.UserId, leave.Staff.Name+"向你发起了请假申请，请在待我审批菜单里查看详情！")
+				wechat.SendText(leave.ApprovedBy.UserId, leave.Staff.Name+"向你发起了请假申请，请在待我审批菜单里查看详情！")
 				c.Redirect("/leave_history", 302) //申请成功后调到请假记录
 			}
 
