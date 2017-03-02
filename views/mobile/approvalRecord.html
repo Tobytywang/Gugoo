@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style type="text/css">
+        body
+        {
+            margin: 5%;
+        }
+        table
+        {
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+        }
+        th
+        {
+            padding: 6% 0;
+        }
+        td
+        {
+            font-size: 1.2em;
+        }
+        a
+        {
+            text-decoration: none;
+        }
+
+    </style>
+    <title>假条表单</title>
+</head>
+<body>
+
+<!--判断为哪一种表单：请假记录，待我审批，审批记录-->
+{{if compare .table_cate "LeaveHistory"}}
+<h1>请假记录</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>申请时间</th>
+        <th>审批状态</th>
+        <!--<th>审批时间</th>-->
+        <th>审批人</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .List}}
+    <tr>
+        <td> <a href="/leave_detail?leaveid={{.Id}}&op=viewleave">{{date .DateAsk "Y-m-d H:i"}}</a></td>
+        <td>{{if compare .ApprovedState 0 }}待审批{{else if compare .ApprovedState -1}}未通过{{else if compare .ApprovedState 1}}已通过{{end}}</td>
+        <!--<td>{{date .DateOk "Y-m-d H:i"}}</td>-->
+        <td>{{.ApprovedBy.Name}}</td>
+    </tr>
+
+    {{end}}
+    </tbody>
+
+</table>
+{{else if compare .table_cate "WaitApproveList"}}
+<h1>待我审批</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>申请人</th>
+        <th>申请时间</th>
+        <!--<th>申请时长</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    {{range .List}}
+    <tr>
+        <td>{{.Staff.Name}}</td>
+        <td> <a href="/leave_detail?leaveid={{.Id}}&op=approve">{{date .DateAsk "Y-m-d H:i"}}</a></td>
+        <!--<td>{{date .DateOk "Y-m-d H:i"}}</td>-->
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+{{else if compare .table_cate "ApproveHistoryList"}}
+<h1>审批记录</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>申请人</th>
+        <!--<th>申请时间</th>-->
+        <th>审批结果</th>
+        <th>审批时间</th>
+    </tr>
+    </thead>
+    {{range .List}}
+    <tr>
+        <td>{{.Staff.Name}}</td>
+        <!--<td> <a href="/leave_detail?leaveid={{.Id}}&op=viewapprove">{{date .DateAsk "Y-m-d H:i"}}</a></td>-->
+        <td>{{if compare .ApprovedState -1}}未通过{{else if compare .ApprovedState 1}}通过{{end}}</td>
+        <td><a href="/leave_detail?leaveid={{.Id}}&op=viewapprove">{{date .DateOk "Y-m-d H:i"}}</a></td>
+    </tr>
+    {{end}}
+    </tbody>
+</table>
+{{end}}
+</body>
+</html>

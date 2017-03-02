@@ -5,6 +5,8 @@ import (
 
 	"log"
 
+	"studyGolang/astaxie/beego"
+
 	"github.com/chanxuehong/wechat/corp"
 	"github.com/chanxuehong/wechat/corp/menu"
 	"github.com/chanxuehong/wechat/corp/message/send"
@@ -16,30 +18,18 @@ var corpClient = corp.NewClient(AccessTokenServer, nil)
 
 func CreateMenu() {
 	var subButtons0 = make([]menu.Button, 3)
-	//subButtons0[0].SetAsLocationSelectButton("位置", "1")
-	//subButtons0[1].SetAsClickButton("赞一下", "2")
-	//subButtons0[2].SetAsViewButton("博客", "http://luqi0119.cn")
+
 	subButtons0[0].SetAsClickButton("打卡", "1")
 	subButtons0[1].SetAsClickButton("状态查询", "2")
-	subButtons0[2].SetAsViewButton("历史记录", Domain+"/checkin_m")
+	subButtons0[2].SetAsViewButton("历史记录", Domain+"/checkin_history")
 
-	//var subButtons1 = make([]menu.Button, 2)
-	//subButtons1[0].SetAsClickButton("手机号", "3")
-	//subButtons1[1].SetAsViewButton("详细信息", "http://www.baidu.com")
-
-	//subButtons1[0].SetAsPicPhotoOrAlbumButton("PicOrAlbum", "3")
-	//subButtons1[1].SetAsPicSysPhotoButton("SysPhoto", "4")
-	//subButtons1[2].SetAsPicWeixinButton("PicWeixin", "5")
 	var subButtons2 = make([]menu.Button, 4)
-	subButtons2[0].SetAsViewButton("请假", Domain+"/leave_asf")
-	subButtons2[1].SetAsViewButton("请假记录", Domain+"/leave_m")
+	subButtons2[0].SetAsViewButton("请假", Domain+"/leave_for_leave")
+	subButtons2[1].SetAsViewButton("请假记录", Domain+"/leave_history")
 	//这个要匹配，只有管理人员才显示这一项
-	subButtons2[2].SetAsViewButton("待我审批", Domain+"/leave_m")
-	subButtons2[3].SetAsViewButton("审批记录", Domain+"/leave_m")
+	subButtons2[2].SetAsViewButton("待我审批", Domain+"/leave_to_appr")
+	subButtons2[3].SetAsViewButton("审批记录", Domain+"/leave_appr_history")
 
-	//subButtons2[0].SetAsScanCodePushButton("ScanCodePush", "6")
-	//subButtons2[1].SetAsScanCodeWaitMsgButton("ScanCodeWaitMsg", "7")
-	//
 	var mn menu.Menu
 	mn.Buttons = make([]menu.Button, 3)
 	mn.Buttons[0].SetAsSubMenuButton("打卡栏", subButtons0)
@@ -79,7 +69,7 @@ func GetUserInfo(code string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	log.Println("GetUserInfo", err)
+	//log.Println("GetUserInfo", err)
 	return userInfo.UserId, userInfo.DeviceId, err
 }
 
@@ -95,5 +85,8 @@ func SendText(userid, content string) {
 	text.Text.Content = content
 
 	_, err := sendClient.SendText(text)
+	if err != nil {
+		beego.Debug(err)
+	}
 	log.Println(text, err)
 }

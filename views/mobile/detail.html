@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style type="text/css">
+        body
+        {
+            margin: 5%;
+        }
+        p:nth-of-type(4)
+        {
+            word-break: break-all;
+        }
+        hr
+        {
+            margin: 10% 0;
+        }
+        select
+        {
+            padding: 2px 10px;
+            border: solid 1px #aaa;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        input
+        {
+            width: 100%;
+            border: solid 1px #aaa;
+            border-radius: 4px;
+            font-size: 1.5em;
+        }
+    </style>
+    <title>请假详情</title>
+</head>
+<body>
+<h1>请假详情</h1>
+{{with .Leave}}
+<p>申请人：{{.Staff.Name}}</p>
+<p>申请时间：{{date .DateAsk "Y-m-d H:i"}}</p>
+<p>开始时间：{{date .DateStart "Y-m-d H:i"}}</p>
+<p>结束时间：{{date .DateEnd "Y-m-d H:i"}}</p>
+<p>请假原因：{{.Reason}}</p>
+<hr>
+{{if compare $.op "approve"}}
+<form   action="/leave_detail?leaveid={{.Id}}" method="POST">
+    审批：
+    <select name="PassOrNot">
+        <option value="yes">同 意</option>
+        <option value="no">不 同 意</option>
+    </select>
+    <hr>
+    <input type="submit" name="submit" value="提          交">
+</form>
+{{else}}
+<p>审批状态：{{if compare .ApprovedState 0 }}待审批{{else if compare .ApprovedState -1}}未通过{{else if compare .ApprovedState 1}}已通过{{end}}</p>
+{{end}}{{end}}
+
+</body>
+</html>

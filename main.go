@@ -19,12 +19,13 @@ func init() {
 
 func main() {
 	// 开启 ORM 调试模式
-	orm.Debug = true
+	orm.Debug = false
+	//beego.SetLevel(beego.LevelWarning)
 	// 自动建表
 	//orm.RunSyncdb("default", false, true)
 
 	//wechat.CreateMenu()
-	wechat.PrintMenu()
+	//wechat.PrintMenu()
 	//wechat.SendText("67|HappyLich", "企业号主动给你发消息了～～～")
 	wechat.LocationMap = make(map[string]request.LocationEvent)
 	//wechat.UpdateStaffInfo()
