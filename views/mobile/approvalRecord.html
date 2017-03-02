@@ -36,6 +36,7 @@
 
 <!--判断为哪一种表单：请假记录，待我审批，审批记录-->
 {{if compare .table_cate "LeaveHistory"}}
+<h3 style="color:green">{{.flash.error}}{{.flash.notice}}</h3>
 <h1>请假记录</h1>
 <table border="1">
     <thead>

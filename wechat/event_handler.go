@@ -46,7 +46,7 @@ func SubscribeEventHandler(w http.ResponseWriter, r *corp.Request) {
 	subscribe := request.GetSubscribeEvent(r.MixedMsg) // 可以省略, 直接从 r.MixedMsg 取值
 	fmt.Println(subscribe)
 	resp := response.NewText(subscribe.FromUserName, subscribe.ToUserName, subscribe.CreateTime, "欢迎关注Gugoo微信企业号～～～")
-	UpdateStaffInfo()
+	UpdateStaffInfo() //更新数据库用户信息
 	SendText("67", subscribe.FromUserName+"已关注咕咕微信企业号！")
 	corp.WriteResponse(w, r, resp)
 }

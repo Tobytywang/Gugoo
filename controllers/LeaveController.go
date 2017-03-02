@@ -26,8 +26,8 @@ func (c *LeaveController) PcGet() {
 
 // 发起请假请求
 func (c *LeaveController) AskForLeave() {
-	flash := beego.NewFlash()
 	if c.Ctx.Input.IsPost() {
+		flash := beego.NewFlash()
 		if c.GetString("reason") == "" || c.GetString("start") == "" || c.GetString("end") == "" {
 			flash.Error("提交的信息不能为空！")
 			flash.Store(&c.Controller)
@@ -38,7 +38,7 @@ func (c *LeaveController) AskForLeave() {
 			// 请假人
 			leave.Staff = c.Staff
 			// 批准人
-			leave.ApprovedBy, _ = models.StaffByUserId(c.GetString("whoappr"))
+			leave.ApprovedBy, _ = models.StaffByUserId("67" /*c.GetString("whoappr")*/)
 			leave.DateAsk = time.Now()
 			leave.DateOk = leave.DateAsk //将批准时间设置和申请时间相同，表示待批准
 			leave.DateStart = c.GetTime(c.GetString("start"))
@@ -53,17 +53,19 @@ func (c *LeaveController) AskForLeave() {
 				c.Redirect("/leave_for_leave", 302)
 			} else {
 				beego.Debug("申请成功！")
-				flash.Notice("申请成功！")
+				flash.Notice("申请成功，请耐心等待审批！")
 				flash.Store(&c.Controller)
-				wechat.SendText(leave.ApprovedBy.UserId, leave.Staff.Name+"向你发起了请假申请，请在待我审批菜单里查看详情！")
+				//wechat.SendText(leave.ApprovedBy.UserId, leave.Staff.Name+"向你发起了请假申请，请在待我审批菜单里查看详情！")
+				c.Redirect("/leave_history", 302) //申请成功后调到请假记录
 			}
 
 		}
 	} else {
-		flash = beego.ReadFromRequest(&c.Controller)
-		if _, ok := flash.Data["error"]; ok {
-			c.Data["Error"] = true
-		}
+		flash := beego.ReadFromRequest(&c.Controller)
+		beego.Debug(flash)
+		//	if _, ok := flash.Data["error"]; ok {
+		//		c.Data["Error"] = true
+		//	}
 	}
 	c.TplName = "mobile/forLeave.html"
 }
@@ -114,6 +116,8 @@ func (c *LeaveController) LeaveDetailApprove() {
 
 // 查看我的请假历史
 func (c *LeaveController) LeaveHistory() {
+	flash := beego.ReadFromRequest(&c.Controller)
+	beego.Debug(flash)
 	ls, err := models.LeaveListGetByAskStaffId(c.UserId)
 	if err != nil {
 		beego.Debug(err)

@@ -34,7 +34,7 @@ func GetAddressList() string {
 func UpdateStaffInfo() error {
 	addressClient := (*addresslist.Client)(corpClient)
 	userList, err := addressClient.UserList(DepartmentId, false, 0)
-	log.Println(userList)
+	//log.Println(userList)
 	if err != nil {
 		fmt.Println("获取用户列表错误！")
 		return err

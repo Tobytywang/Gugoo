@@ -35,7 +35,7 @@
 
 <body ontouchstart style="background-color: #f8f8f8;">
 <div class="page-hd">
-        <h1 class="page-hd-title">我的打卡信息</h1>
+        <h1 class="page-hd-title">{{.ThisYear}}年{{.ThisMonth}}月的打卡记录</h1>
 </div>
 <table class="weui-table weui-border-tb">
   <tr>
@@ -58,7 +58,7 @@
     <div class="weui_cell">
       <div class="weui_cell_hd"><label for="" class="weui_label">时间：</label></div>
       <div class="weui_cell_bd weui_cell_primary">
-        <input class="weui_input" type="text" value="2017 01" id='time' name="time"/>
+        <input class="weui_input" type="text" value="{{.ThisYear}} {{.ThisMonth}}" id='time' name="time"/>
       </div>
     </div>
   </div>
