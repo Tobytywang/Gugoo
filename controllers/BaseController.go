@@ -27,7 +27,7 @@ type CheckinPrepare interface {
 
 func (c *BaseController) Prepare() {
 	beego.Debug("in prepare")
-	c.CheckLogin()
+	// c.CheckLogin()
 
 	//AppController表示当前子类是哪个Controller
 	switch app := c.AppController.(type) {

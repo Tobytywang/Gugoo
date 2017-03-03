@@ -37,9 +37,7 @@ const (
 // 返回： 一个可以容纳所有结果的slice，错误信息
 func LoadCheckin() (check []Checkin, err error) {
 	o := orm.NewOrm()
-	beego.Debug("开始LoadCheckin")
 	o.QueryTable("checkin").RelatedSel().All(&check)
-	beego.Debug("结束LoadCheckin")
 	return check, nil
 }
 

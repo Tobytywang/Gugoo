@@ -1,20 +1,45 @@
-{{template "pc/top.html" .}}
-  <div class="container">
-    <div class="top">
-      <h2>Gugoo</h2>
-    </div>
-    <div class="left">
-      <ul>
-        <li><a href="/addr"><div class="button">通讯录</div></a></li>
-        <li><a href="/checkin"><div class="button">考勤</div></a></li>
-        <li><a href="/leave"><div class="button">请假</div></a></li>
-      </ul>
-    </div>
-    <div class="right">
-      <div class="right-content">
-        <h1>这是请假信息</h1>
-      </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="../../static/style.css">
+  <link rel="stylesheet" href="../../static/css/font-awesome.min.css">
+  <title>Gugoo</title>
+</head>
+<body>
+<div class="top">
+  <h2>Gugoo</h2>
+</div>
+<div class="left">
+  <ul>
+    <li><a href="/checkin"><i class="fa fa-check fa-1x"></i>考勤</a></li>
+    <li><a href="/leave"><i class="fa fa-leaf fa-1x"></i>请假</a></li>
+  </ul>
+</div>
+<div class="right">
+  <div class="right-content">
+    <h1>这是请假信息</h1>
+    <table>
+      <tr>
+        <th>申请人</th>
+        <th>申请时间</th>
+        <th>申请原因</th>
+        <th>状态</th>
+        <th>审批人</th>
+      </tr>
+      {{range .List}}
+      <tr>
+       <td>{{.Staff.Name}}</td>
+        <td>{{date .DateStart "Y-m-d"}}到{{date .DateEnd "Y-m-d"}}</td>
+        <td>{{.Reason}}</td>
+        <td>{{if compare .ApprovedState 1}}已通过{{else}}待审批{{end}}</td>
+        <td>{{.ApprovedBy.Name}}</td>
+      </tr>
+      {{end}}
+    </table>
   </div>
+</div>
 </body>
 </html>

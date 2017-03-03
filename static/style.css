@@ -1,7 +1,6 @@
 div,ul,ol,dl{
   margin: 0px;
   padding: 0px;
-
 }
 a {
   text-decoration:none;
@@ -10,22 +9,23 @@ a {
 ul,ol,dl {
   list-style: none;
 }
-.container {
-  background-color: #0000FF;
-}
+
 .top {
-  background-color: #339977;
+  background-color: #eeeeee;
   height: 50px;
   position: fixed;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
+  margin: 0;
+  border-bottom: 1px ;
 }
+
 .left {
+  background-color: #333333;
   padding: 0px 0px 0px 0px;
-  background-color: #DDDDDD;
-  width: 180px;
+  width: 80px;
   height: 100%;
   position: fixed;
   top: 50px;
@@ -34,25 +34,40 @@ ul,ol,dl {
   bottom: 0px;
 }
 .left ul {
-  border-top: 1px solid #0000ff;
+  color: #ffffff;
+  margin: 0px;
 }
-.left ul li{
-  border-bottom: 1px solid #0000ff;
-  background-color: #00aa00;
-  height: 30px;
+.left ul li {
+  margin: 0px;
+  padding: 0px;
+}
+.left ul li a:hover {
+  background-color: rgba(233, 233, 233, 0.2);
+}
+.left ul li a{
+  width: 100%;
+  display: inline-block;
+  color: #ffffff;
   text-align: center;
 }
-.left ul li div {
-  height: 30px;
+.left ul li a .item{
+  width: 100%;
+  height: 38px;
+  display: inline-block;
+  padding: 8px 0;
 }
+.left ul li i{
+  display: block;
+}
+
 .right {
   background-color: #CCCCCC;
-  width: auto;
-  position: absolute;
+  position: relative;
   top: 50px;
-  left: 180px;
+  left: 80px;
   right: 0px;
   bottom: 0px;
+  margin: 0px;
 }
 .right-content table {
 }

@@ -20,7 +20,10 @@ func (c *LeaveController) LeavePrepare() {
 func (c *LeaveController) MobileGet() {
 	c.TplName = "mobile/approvalRecord.html"
 }
+
 func (c *LeaveController) PcGet() {
+	ls := models.LoadLeave()
+	c.Data["List"] = ls
 	c.TplName = "pc/leave.html"
 }
 

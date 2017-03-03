@@ -23,9 +23,10 @@ type Leave struct {
 // 查看所有请假信息
 // 参数： 一个可以容纳这些请假信息的slice
 // 返回： 无
-func LoadLeave(llist *[]*Leave) {
+func LoadLeave() (list []Leave) {
 	o := orm.NewOrm()
-	o.QueryTable("leaves").All(llist)
+	o.QueryTable("leaves").RelatedSel().All(&list)
+	return list
 }
 
 // 发起请假申请，添加假条，前台页面表单都不能为空，注意过滤

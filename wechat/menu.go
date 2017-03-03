@@ -5,7 +5,7 @@ import (
 
 	"log"
 
-	"studyGolang/astaxie/beego"
+	"github.com/astaxie/beego"
 
 	"github.com/chanxuehong/wechat/corp"
 	"github.com/chanxuehong/wechat/corp/menu"
