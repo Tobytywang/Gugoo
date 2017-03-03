@@ -15,6 +15,7 @@ import (
 func init() {
 	models.RegisterDB()
 	orm.RunSyncdb("default", false, true)
+	wechat.UpdateStaffInfo()
 }
 
 func main() {
@@ -24,45 +25,11 @@ func main() {
 	// 自动建表
 	//orm.RunSyncdb("default", false, true)
 
-	//wechat.CreateMenu()
-	//wechat.PrintMenu()
-	//wechat.SendText("67|HappyLich", "企业号主动给你发消息了～～～")
-	wechat.LocationMap = make(map[string]request.LocationEvent)
-	//wechat.UpdateStaffInfo()
-	go wechat.Wechat()
+	//wechat.CreateMenu() //修改菜单时用一次就好
+	wechat.PrintMenu()
 
-	//user1 := new(models.Staff)
-	//user1.Id = 1
-	//user1.UserId = "123"
-	//user1.Name = "HappyLich"
-	//user1.Department = 3
-	//user1.Position = "liu"
-	//user1.Mobile = "13333333333"
-	//user1.Email = "wang@163.com"
-	//user1.WeixinId = "455sd"
-	//
-	//if _, err := models.SaveStaff(user1); err != nil {
-	//	beego.Debug("内部错误:")
-	//	beego.Debug(err)
-	//}
-	//beego.Debug("现在的时间是：", time.Now().Hour(), "点", time.Now().Minute(), "分\n")
-	//if n, err := models.Check("123"); err != nil {
-	//	beego.Debug(err)
-	//} else {
-	//	switch n {
-	//	case 1:
-	//		beego.Debug("第", n, "次打卡成功。")
-	//	case 2:
-	//		beego.Debug("第", n, "次打卡成功。")
-	//	case 3:
-	//		beego.Debug("第", n, "次打卡成功。")
-	//	default:
-	//		beego.Debug("n=", n)
-	//	}
-	//}
-	//
-	//beego.Debug("根据ID查找用户\n")
-	//beego.Debug(models.StaffByUserId("123"))
+	wechat.LocationMap = make(map[string]request.LocationEvent)
+	wechat.Wechat()
 
 	beego.Run()
 }

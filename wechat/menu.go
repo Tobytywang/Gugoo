@@ -6,7 +6,10 @@ import (
 	"log"
 
 	"github.com/astaxie/beego"
+<<<<<<< HEAD
 
+=======
+>>>>>>> 80e8b3004e145665a038d561e63250676a12cb14
 	"github.com/chanxuehong/wechat/corp"
 	"github.com/chanxuehong/wechat/corp/menu"
 	"github.com/chanxuehong/wechat/corp/message/send"

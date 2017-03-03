@@ -33,7 +33,7 @@ func (c *LoginController) Login() {
 		errMsg = "未通过微信验证！"
 	}
 
-	c.Data["json"] = &map[string]interface{}{"error": errMsg}
+	c.Data["json"] = &map[string]interface{}{"error": errMsg, "code": code}
 	c.ServeJSON()
 	c.StopRun()
 }
